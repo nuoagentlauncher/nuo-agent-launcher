@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>nuo agent launcher - 官方下载</title>
+<meta name="description" content="nuo agent launcher：一键启动你的 Minecraft 世界 · 集成 Java 自动下载 · 免费免密钥 AI 助手 · 联机大厅" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233b82f6'/%3E%3Cstop offset='1' stop-color='%238b5cf6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='2' y='2' width='60' height='60' rx='14' fill='url(%23g)'/%3E%3Ctext x='32' y='44' font-family='Arial Black,Arial' font-size='34' font-weight='900' fill='%23fff' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E" />
+<style>
+  :root {
+    --accent: #3b82f6;
+    --accent2: #8b5cf6;
+    --bg: #f6f8fb;
+    --card: #ffffff;
+    --border: #e5e9f2;
+    --text: #1e293b;
+    --text2: #475569;
+    --text3: #94a3b8;
+    --shadow: 0 20px 60px rgba(30, 41, 59, 0.10);
+    --radius: 16px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+  ::selection { background: rgba(59, 130, 246, 0.25); }
+
+  /* ============ 导航 ============ */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 5vw;
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(229, 233, 242, 0.8);
+  }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 17px; }
+  .brand .logo {
+    width: 34px; height: 34px; border-radius: 9px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff; display: grid; place-items: center;
+    font-size: 18px; font-weight: 900;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+    animation: logoFloat 4s ease-in-out infinite;
+  }
+  @keyframes logoFloat { 0%,100% { transform: translateY(0) rotate(0deg);} 50% { transform: translateY(-4px) rotate(-3deg);} }
+  .nav-links { display: flex; gap: 26px; align-items: center; }
+  .nav-links a { color: var(--text2); text-decoration: none; font-size: 14.5px; font-weight: 500; position: relative; transition: color .25s; }
+  .nav-links a::after {
+    content: ""; position: absolute; left: 0; bottom: -5px; height: 2.5px; width: 0;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 2px; transition: width .3s ease;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-cta {
+    background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff !important;
+    padding: 8px 18px; border-radius: 10px; font-weight: 600;
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35); transition: transform .25s, box-shadow .25s;
+  }
+  .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99, 102, 241, 0.45); }
+  .nav-cta::after { display: none; }
+  @media (max-width: 760px) { .nav-links a:not(.nav-cta) { display: none; } }
+
+  /* ============ Hero ============ */
+  .hero {
+    position: relative; min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 130px 5vw 80px; overflow: hidden;
+  }
+  .aurora { position: absolute; inset: 0; z-index: -2; overflow: hidden; }
+  .aurora span {
+    position: absolute; border-radius: 50%; filter: blur(90px); opacity: .5;
+    animation: drift 16s ease-in-out infinite;
+  }
+  .aurora span:nth-child(1) { width: 46vw; height: 46vw; left: -10vw; top: -12vw; background: #93c5fd; }
+  .aurora span:nth-child(2) { width: 40vw; height: 40vw; right: -8vw; top: 4vw; background: #c4b5fd; animation-delay: -5s; }
+  .aurora span:nth-child(3) { width: 34vw; height: 34vw; left: 28vw; bottom: -16vw; background: #a7f3d0; animation-delay: -10s; opacity: .4; }
+  @keyframes drift {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(6vw, 4vw) scale(1.12); }
+    66% { transform: translate(-5vw, -3vw) scale(0.94); }
+  }
+  /* 漂浮像素方块 */
+  .cubes { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+  .cube {
+    position: absolute; background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 6px; opacity: .16; animation: cubeFloat 9s ease-in-out infinite;
+    box-shadow: 0 10px 30px rgba(99, 102, 241, .25);
+  }
+  .cube:nth-child(1) { width: 54px; height: 54px; left: 8%;  top: 22%; animation-delay: 0s; }
+  .cube:nth-child(2) { width: 30px; height: 30px; left: 18%; top: 68%; animation-delay: -2s; opacity: .12; }
+  .cube:nth-child(3) { width: 44px; height: 44px; right: 12%; top: 26%; animation-delay: -4s; }
+  .cube:nth-child(4) { width: 22px; height: 22px; right: 22%; top: 64%; animation-delay: -6s; opacity: .12; }
+  .cube:nth-child(5) { width: 36px; height: 36px; left: 46%; top: 12%; animation-delay: -3s; opacity: .10; }
+  .cube:nth-child(6) { width: 26px; height: 26px; left: 60%; top: 80%; animation-delay: -7s; opacity: .12; }
+  @keyframes cubeFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-26px) rotate(12deg); }
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,.8); border: 1px solid var(--border);
+    padding: 7px 18px; border-radius: 999px; font-size: 13.5px; color: var(--text2);
+    box-shadow: 0 4px 14px rgba(30,41,59,.06); margin-bottom: 26px;
+    animation: fadeUp .8s ease both;
+  }
+  .hero-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(34,197,94,.5);} 60% { box-shadow: 0 0 0 7px rgba(34,197,94,0);} }
+  .hero h1 {
+    font-size: clamp(44px, 7.2vw, 86px); font-weight: 900; letter-spacing: -1px;
+    line-height: 1.08; margin-bottom: 20px;
+    background: linear-gradient(120deg, #1e293b 20%, var(--accent) 55%, var(--accent2) 80%);
+    background-size: 200% auto;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: fadeUp .8s .1s ease both, shine 6s linear 1s infinite;
+  }
+  @keyframes shine { to { background-position: 200% center; } }
+  .hero p.sub {
+    font-size: clamp(15px, 1.8vw, 19px); color: var(--text2); max-width: 640px;
+    margin: 0 auto 40px; animation: fadeUp .8s .2s ease both;
+  }
+  .hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; animation: fadeUp .8s .3s ease both; }
+  .btn-big {
+    position: relative; overflow: hidden;
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 16px 34px; border-radius: 14px; font-size: 16.5px; font-weight: 700;
+    text-decoration: none; transition: transform .25s, box-shadow .25s;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff;
+    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+  }
+  .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 16px 40px rgba(99, 102, 241, 0.5); }
+  .btn-primary::before {
+    content: ""; position: absolute; top: 0; left: -80%; width: 50%; height: 100%;
+    background: linear-gradient(105deg, transparent, rgba(255,255,255,.45), transparent);
+    transform: skewX(-20deg); animation: sweep 3.2s ease infinite;
+  }
+  @keyframes sweep { 0% { left: -80%; } 45%, 100% { left: 130%; } }
+  .btn-plain {
+    background: rgba(255,255,255,.85); color: var(--text); border: 1.5px solid var(--border);
+    box-shadow: 0 6px 20px rgba(30,41,59,.07);
+  }
+  .btn-plain:hover { transform: translateY(-3px); border-color: var(--accent); color: var(--accent); }
+  .hero-meta { margin-top: 34px; display: flex; gap: 26px; flex-wrap: wrap; justify-content: center; animation: fadeUp .8s .45s ease both; }
+  .hero-meta span { font-size: 13.5px; color: var(--text3); display: inline-flex; align-items: center; gap: 6px; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+  .reveal { opacity: 0; transform: translateY(36px); transition: opacity .8s cubic-bezier(.2,.7,.3,1), transform .8s cubic-bezier(.2,.7,.3,1); }
+  .reveal.on { opacity: 1; transform: translateY(0); }
+
+  section { padding: 90px 5vw; }
+  .sec-title { text-align: center; font-size: clamp(28px, 4vw, 40px); font-weight: 800; margin-bottom: 12px; letter-spacing: -.5px; }
+  .sec-sub { text-align: center; color: var(--text3); font-size: 15px; margin-bottom: 52px; }
+
+  /* ============ 特性 ============ */
+  .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; max-width: 1180px; margin: 0 auto; }
+  .feature {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 26px 22px; transition: transform .3s ease, box-shadow .3s ease, border-color .3s;
+    position: relative; overflow: hidden;
+  }
+  .feature::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(59,130,246,.07), rgba(139,92,246,.07));
+    opacity: 0; transition: opacity .3s;
+  }
+  .feature:hover { transform: translateY(-7px); box-shadow: var(--shadow); border-color: transparent; }
+  .feature:hover::after { opacity: 1; }
+  .feature .ico {
+    width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center;
+    font-size: 22px; margin-bottom: 16px;
+    background: linear-gradient(135deg, rgba(59,130,246,.14), rgba(139,92,246,.14));
+    transition: transform .3s;
+  }
+  .feature:hover .ico { transform: scale(1.12) rotate(-6deg); }
+  .feature h3 { font-size: 16.5px; margin-bottom: 8px; }
+  .feature p { font-size: 13.5px; color: var(--text2); }
+  .feature .tag {
+    display: inline-block; margin-top: 12px; font-size: 11.5px; font-weight: 700;
+    color: #16a34a; background: rgba(34,197,94,.12); padding: 3px 10px; border-radius: 999px;
+  }
+
+  /* ============ 截图展示 ============ */
+  .shots-wrap { max-width: 1080px; margin: 0 auto; }
+  .shot-tabs { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 34px; }
+  .shot-tab {
+    border: 1.5px solid var(--border); background: #fff; color: var(--text2);
+    padding: 9px 20px; border-radius: 999px; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all .28s; position: relative; overflow: hidden;
+  }
+  .shot-tab:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+  .shot-tab.active {
+    background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff;
+    border-color: transparent; box-shadow: 0 6px 18px rgba(99,102,241,.35);
+  }
+  .shot-stage {
+    position: relative; border-radius: 22px; padding: 14px;
+    background: linear-gradient(135deg, rgba(59,130,246,.12), rgba(139,92,246,.12));
+    box-shadow: var(--shadow);
+  }
+  .shot-view { position: relative; min-height: 560px; }
+  .shot {
+    position: absolute; inset: 0; opacity: 0; transform: translateX(46px) scale(.985);
+    transition: opacity .55s ease, transform .55s cubic-bezier(.2,.7,.3,1);
+    pointer-events: none; display: flex; flex-direction: column;
+  }
+  .shot.active { opacity: 1; transform: translateX(0) scale(1); pointer-events: auto; }
+  .shot-nav { position: absolute; top: 50%; transform: translateY(-50%); z-index: 10;
+    width: 42px; height: 42px; border-radius: 50%; border: none; cursor: pointer;
+    background: rgba(255,255,255,.9); color: var(--text2); font-size: 17px;
+    box-shadow: 0 4px 16px rgba(30,41,59,.16); transition: all .25s;
+  }
+  .shot-nav:hover { background: var(--accent); color: #fff; transform: translateY(-50%) scale(1.1); }
+  .shot-nav.prev { left: -16px; } .shot-nav.next { right: -16px; }
+  .shot-progress { position: absolute; bottom: -1px; left: 0; height: 3px; border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2)); width: 0; }
+  .shot-progress.run { animation: prog 6s linear forwards; }
+  @keyframes prog { from { width: 0; } to { width: 100%; } }
+
+  /* —— 浏览器窗口框 —— */
+  .browser {
+    flex: 1; display: flex; flex-direction: column; overflow: hidden;
+    border-radius: 14px; background: #eef1f7; border: 1px solid #dfe5ef;
+    box-shadow: 0 18px 50px rgba(30,41,59,.14);
+  }
+  .browser-bar {
+    display: flex; align-items: center; gap: 8px; padding: 9px 14px;
+    background: #f8fafc; border-bottom: 1px solid #e8edf5;
+  }
+  .browser-bar i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+  .browser-bar i:nth-child(1) { background: #ff5f57; } .browser-bar i:nth-child(2) { background: #febc2e; } .browser-bar i:nth-child(3) { background: #28c840; }
+  .browser-bar .addr {
+    flex: 1; margin-left: 10px; background: #fff; border: 1px solid #e5e9f2; border-radius: 7px;
+    font-size: 11px; color: var(--text3); padding: 4px 12px; text-align: left;
+  }
+  .browser-body { flex: 1; display: flex; overflow: hidden; background: var(--bg); text-align: left; }
+
+  /* —— 复刻：应用窗口通用 —— */
+  .app { flex: 1; display: flex; flex-direction: column; background: var(--bg); min-width: 0; }
+  .app-titlebar {
+    display: flex; align-items: center; justify-content: space-between;
+    background: #fff; border-bottom: 1px solid var(--border); padding: 6px 12px;
+    font-size: 11px; color: var(--text2);
+  }
+  .app-titlebar .win-btns { display: flex; gap: 14px; color: var(--text3); font-size: 11px; }
+  .app-main { flex: 1; display: flex; min-height: 0; }
+
+  /* 侧栏 */
+  .side { width: 172px; background: #fff; border-right: 1px solid var(--border); padding: 10px 8px; display: flex; flex-direction: column; flex-shrink: 0; }
+  .side .brandline { display: flex; align-items: center; gap: 8px; padding: 4px 8px 12px; }
+  .side .nlogo {
+    width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center;
+    background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; font-weight: 900; font-size: 14px;
+  }
+  .side .bname { font-weight: 800; font-size: 12.5px; line-height: 1.15; }
+  .side .bname small { display: block; font-weight: 400; font-size: 9.5px; color: var(--text3); }
+  .side nav2 { display: block; }
+  .snav {
+    display: flex; align-items: center; gap: 8px; padding: 6.5px 10px; border-radius: 8px;
+    font-size: 12px; color: var(--text2); margin-bottom: 2px;
+  }
+  .snav.active { background: #eef4ff; color: var(--accent); font-weight: 700; }
+  .side .devbadge {
+    margin-top: auto; display: inline-flex; align-items: center; gap: 5px; align-self: flex-start;
+    font-size: 9.5px; color: #16a34a; background: rgba(34,197,94,.12); padding: 3px 8px; border-radius: 999px;
+  }
+  .side .ver { font-size: 9px; color: var(--text3); padding: 6px 8px 0; }
+
+  /* 主区 */
+  .mains { flex: 1; padding: 14px 16px; overflow: hidden; min-width: 0; }
+  .hero-app {
+    border-radius: 14px; padding: 26px 26px 22px;
+    background: linear-gradient(120deg, #dbe7fb 0%, #e6e2fa 55%, #efe6fb 100%);
+    margin-bottom: 12px;
+  }
+  .hero-app h2 { font-size: 25px; font-weight: 900; letter-spacing: -.5px; margin-bottom: 6px; }
+  .hero-app p { font-size: 11px; color: var(--text2); margin-bottom: 14px; }
+  .btn-launch {
+    display: inline-block; background: linear-gradient(135deg, #4f8df7, #7c5cf6); color: #fff;
+    font-size: 12.5px; font-weight: 700; padding: 9px 26px; border-radius: 9px;
+    box-shadow: 0 6px 16px rgba(99,102,241,.35);
+  }
+  .sel-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; display: flex; gap: 18px; margin-bottom: 12px; }
+  .sel-col { flex: 1; }
+  .sel-col label { font-size: 10.5px; color: var(--text2); display: block; margin-bottom: 5px; }
+  .sel-box { border: 1px solid var(--border); border-radius: 8px; padding: 7px 10px; font-size: 11px; color: var(--text3); background: #f8fafc; display: flex; justify-content: space-between; }
+  .mini-btn { display: inline-block; margin-top: 6px; font-size: 9.5px; color: var(--text2); border: 1px solid var(--border); background: #fff; border-radius: 7px; padding: 3.5px 9px; }
+  .quick4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .qcard { background: #fff; border: 1px solid var(--border); border-radius: 11px; padding: 11px 12px; }
+  .qcard .qi { font-size: 16px; margin-bottom: 5px; }
+  .qcard b { display: block; font-size: 11.5px; margin-bottom: 2px; }
+  .qcard span { font-size: 9px; color: var(--text3); }
+
+  /* 联机大厅 */
+  .page-pad { padding: 18px 22px; }
+  .h1line { font-size: 19px; font-weight: 900; margin-bottom: 10px; }
+  .mtabs { display: flex; gap: 7px; margin-bottom: 12px; }
+  .mtab { font-size: 10.5px; padding: 5px 13px; border-radius: 8px; border: 1px solid var(--border); background: #fff; color: var(--text2); }
+  .mtab.active { background: #4f8df7; border-color: #4f8df7; color: #fff; font-weight: 700; }
+  .form-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
+  .form-card h3 { font-size: 14px; font-weight: 800; margin-bottom: 12px; }
+  .fgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; margin-bottom: 10px; }
+  .fl label { font-size: 10px; color: var(--text2); display: block; margin-bottom: 4px; }
+  .fl label em { color: #ef4444; font-style: normal; }
+  .fin { border: 1px solid var(--border); background: #f8fafc; border-radius: 8px; padding: 7px 10px; font-size: 10.5px; color: var(--text3); }
+  .flink { font-size: 9.5px; color: #4f8df7; margin: 2px 0 8px; display: inline-block; }
+  .fbtn { display: inline-block; background: #4f8df7; color: #fff; font-size: 11.5px; font-weight: 700; padding: 8px 18px; border-radius: 8px; }
+  .fnote { display: inline-block; font-size: 9px; color: var(--text3); margin-left: 8px; }
+
+  /* AI 助手 */
+  .ai-head { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; background: #fff; border-bottom: 1px solid var(--border); }
+  .ai-head b { font-size: 15px; }
+  .ai-head .sub { font-size: 9.5px; color: var(--text3); }
+  .ai-acts { display: flex; gap: 6px; }
+  .ai-act { font-size: 9.5px; border: 1px solid var(--border); background: #fff; color: var(--text2); padding: 4px 11px; border-radius: 7px; }
+  .ai-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 12px 26px; }
+  .ai-spark { font-size: 30px; margin-bottom: 6px; animation: sparkSpin 5s ease-in-out infinite; display: inline-block; }
+  @keyframes sparkSpin { 0%,100% { transform: rotate(0) scale(1);} 50% { transform: rotate(14deg) scale(1.12);} }
+  .ai-body b { font-size: 14.5px; margin-bottom: 3px; display: block; }
+  .ai-body .sub { font-size: 9.5px; color: var(--text3); margin-bottom: 12px; }
+  .ai-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; width: min(560px, 92%); }
+  .ai-q { border: 1px solid var(--border); background: #fff; border-radius: 8px; padding: 6.5px 11px; font-size: 9.8px; color: var(--text2); text-align: left; }
+  .ai-input { display: flex; gap: 8px; padding: 10px 18px; border-top: 1px solid var(--border); background: #fff; }
+  .ai-input .box { flex: 1; border: 1px solid var(--border); background: #f8fafc; border-radius: 9px; padding: 8px 12px; font-size: 10px; color: var(--text3); }
+  .ai-send { background: #4f8df7; color: #fff; font-size: 10.5px; font-weight: 700; padding: 8px 20px; border-radius: 9px; }
+
+  /* 日志页 */
+  .log-head { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; }
+  .log-head b { font-size: 16px; }
+  .log-acts { display: flex; gap: 6px; }
+  .log-tabbar { padding: 0 18px 10px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .log-tab { font-size: 9.5px; border: 1px solid var(--border); background: #fff; color: var(--text2); padding: 4.5px 11px; border-radius: 999px; }
+  .log-tab.active { background: #4f8df7; border-color: #4f8df7; color: #fff; font-weight: 700; }
+  .log-filter { display: flex; align-items: center; gap: 9px; padding: 10px 18px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: #fff; }
+  .log-filter .fin { flex: 0 0 200px; }
+  .log-empty { flex: 1; display: grid; place-items: center; color: var(--text3); font-size: 12px; }
+
+  /* 关于页 */
+  .about-hero { text-align: center; padding: 22px 0 18px; }
+  .about-n {
+    width: 54px; height: 54px; border-radius: 14px; margin: 0 auto 10px;
+    background: linear-gradient(135deg, #4f8df7, #7c5cf6); color: #fff;
+    display: grid; place-items: center; font-weight: 900; font-size: 26px;
+    box-shadow: 0 10px 26px rgba(99,102,241,.4);
+  }
+  .about-hero b { font-size: 18px; display: block; }
+  .about-hero .sub { font-size: 10px; color: var(--text3); margin: 3px 0 10px; }
+  .about-btns { display: flex; gap: 8px; justify-content: center; }
+  .about-btns .pri { background: #4f8df7; color: #fff; font-size: 10px; font-weight: 700; padding: 6px 16px; border-radius: 8px; }
+  .about-btns .gho { border: 1px solid var(--border); background: #fff; color: var(--text2); font-size: 10px; padding: 6px 16px; border-radius: 8px; }
+  .about-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin: 0 22px 16px; }
+  .about-card h3 { font-size: 13px; font-weight: 800; margin-bottom: 10px; }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+  .about-it { background: #f6f8fb; border-radius: 9px; padding: 9px 12px; }
+  .about-it b { display: block; font-size: 10.5px; margin-bottom: 2px; }
+  .about-it span { font-size: 9px; color: var(--text3); }
+
+  /* ============ 下载区 ============ */
+  .dl-section { background: linear-gradient(160deg, #eef3fc 0%, #f3effc 100%); }
+  .dl-cards { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; max-width: 980px; margin: 0 auto; }
+  .dl-card {
+    flex: 1; min-width: 300px; max-width: 430px;
+    background: #fff; border: 1px solid var(--border); border-radius: 20px;
+    padding: 34px 30px; text-align: center; position: relative; overflow: hidden;
+    transition: transform .3s ease, box-shadow .3s ease;
+  }
+  .dl-card:hover { transform: translateY(-8px); box-shadow: var(--shadow); }
+  .dl-card .ic { font-size: 38px; margin-bottom: 12px; display: inline-block; animation: cubeFloat 6s ease-in-out infinite; }
+  .dl-card h3 { font-size: 20px; font-weight: 800; margin-bottom: 6px; }
+  .dl-card .meta { color: var(--text3); font-size: 13px; margin-bottom: 22px; }
+  .dl-card .btn-big { width: 100%; justify-content: center; }
+  .dl-card .rec { position: absolute; top: 18px; right: -34px; transform: rotate(38deg);
+    background: linear-gradient(90deg, #f59e0b, #f97316); color: #fff; font-size: 11px; font-weight: 800; padding: 4px 40px; }
+  .dl-note { text-align: center; color: var(--text3); font-size: 13px; margin-top: 30px; }
+  .dl-note b { color: var(--text2); }
+
+  /* ============ 更新日志（实时拉取 GitHub Releases） ============ */
+  .cl-wrap { max-width: 860px; margin: 0 auto; }
+  .cl-loading, .cl-empty { text-align: center; color: var(--text3); font-size: 14px; padding: 40px 0; }
+  @keyframes clSpin { to { transform: rotate(360deg); } }
+  .cl-list { position: relative; padding-left: 26px; }
+  .cl-list::before { content: ""; position: absolute; left: 7px; top: 6px; bottom: 6px; width: 2px;
+    background: linear-gradient(180deg, var(--accent), var(--accent2)); opacity: .35; border-radius: 2px; }
+  .cl-item { position: relative; background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    padding: 22px 24px; margin-bottom: 18px; box-shadow: 0 6px 22px rgba(30,41,59,.05);
+    opacity: 0; transform: translateY(18px); transition: opacity .5s ease, transform .5s ease; }
+  .cl-item.on { opacity: 1; transform: translateY(0); }
+  .cl-item::before { content: ""; position: absolute; left: -25px; top: 26px; width: 12px; height: 12px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2)); box-shadow: 0 0 0 4px rgba(59,130,246,.14); }
+  .cl-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
+  .cl-ver { font-size: 18px; font-weight: 800; color: var(--text); }
+  .cl-pre { font-size: 11px; font-weight: 700; color: #d97706; background: #fef3c7; padding: 2px 8px; border-radius: 999px; }
+  .cl-latest { font-size: 11px; font-weight: 700; color: #059669; background: #d1fae5; padding: 2px 8px; border-radius: 999px; }
+  .cl-date { color: var(--text3); font-size: 12.5px; margin-left: auto; }
+  .cl-name { font-size: 14px; color: var(--text2); font-weight: 600; margin-bottom: 8px; }
+  .cl-body { font-size: 13.5px; color: var(--text2); line-height: 1.85; }
+  .cl-body h1, .cl-body h2, .cl-body h3, .cl-body h4 { font-size: 14.5px; font-weight: 700; color: var(--text); margin: 10px 0 3px; }
+  .cl-body ul { margin: 4px 0; padding-left: 20px; }
+  .cl-body li { margin: 2px 0; }
+  .cl-body p { margin: 4px 0; }
+  .cl-assets { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .cl-assets a { font-size: 12.5px; font-weight: 600; color: var(--accent); text-decoration: none;
+    border: 1px solid var(--accent); padding: 6px 13px; border-radius: 999px; transition: all .2s; }
+  .cl-assets a:hover { background: var(--accent); color: #fff; }
+  .cl-more { text-align: center; margin-top: 22px; }
+  .cl-more a { font-size: 14px; font-weight: 600; color: var(--accent); text-decoration: none; }
+  .cl-more a:hover { text-decoration: underline; }
+
+  /* ============ AI 横幅 ============ */
+  .ai-banner {
+    max-width: 1080px; margin: 0 auto; border-radius: 24px; padding: 46px 40px;
+    background: linear-gradient(120deg, #3b82f6, #8b5cf6, #ec4899);
+    background-size: 220% 220%; animation: gradMove 9s ease infinite;
+    color: #fff; display: flex; align-items: center; justify-content: space-between; gap: 30px; flex-wrap: wrap;
+  }
+  @keyframes gradMove { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+  .ai-banner h3 { font-size: clamp(20px, 2.6vw, 28px); font-weight: 800; margin-bottom: 8px; }
+  .ai-banner p { font-size: 14px; opacity: .92; }
+  .ai-banner .chips { display: flex; gap: 10px; flex-wrap: wrap; }
+  .ai-banner .chip { background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.35);
+    padding: 8px 16px; border-radius: 999px; font-size: 13px; font-weight: 600; backdrop-filter: blur(4px); }
+
+  footer { text-align: center; padding: 44px 5vw 50px; color: var(--text3); font-size: 13px; }
+  footer .foot-brand { display: inline-flex; align-items: center; gap: 8px; font-weight: 800; color: var(--text2); margin-bottom: 10px; }
+  footer .foot-brand .logo { width: 24px; height: 24px; font-size: 13px; border-radius: 7px; display: grid; place-items: center; color: #fff; font-weight: 900;
+    background: linear-gradient(135deg, var(--accent), var(--accent2)); }
+
+  @media (max-width: 640px) {
+    .shot-view { min-height: 430px; }
+    .side { display: none; }
+    .quick4 { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ 导航 ============ -->
+<nav>
+  <div class="brand"><span class="logo">N</span> nuo agent launcher</div>
+  <div class="nav-links">
+    <a href="#features">功能特性</a>
+    <a href="#shots">界面展示</a>
+    <a href="#changelog">更新日志</a>
+    <a href="#ai">免费 AI</a>
+    <a class="nav-cta" href="#download">⬇ 下载</a>
+  </div>
+</nav>
+
+<!-- ============ Hero ============ -->
+<header class="hero">
+  <div class="aurora"><span></span><span></span><span></span></div>
+  <div class="cubes"><i class="cube"></i><i class="cube"></i><i class="cube"></i><i class="cube"></i><i class="cube"></i><i class="cube"></i></div>
+  <div class="hero-badge"><span class="dot"></span> <span id="heroVersion">v1.1.0</span> 正式版 · Windows 10 / 11 x64</div>
+  <h1>nuo agent launcher</h1>
+  <p class="sub">一键启动你的 Minecraft 世界 —— 集成 Java 自动下载 · 基岩版支持 · 免费免密钥 AI 助手 · 联机大厅 · 自动更新</p>
+  <div class="hero-btns">
+    <a class="btn-big btn-primary" id="heroPortable" href="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" target="_blank" rel="noopener">⬇ 下载便携版</a>
+    <a class="btn-big btn-plain" id="heroSetup" href="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" target="_blank" rel="noopener">⬇ 下载安装版</a>
+  </div>
+  <div class="hero-meta">
+    <span>✅ 免费开源</span><span>🤖 AI 无需密钥 开箱即用</span><span>☕ Java 全自动管理</span><span>🌐 官方源 + 国内镜像加速</span>
+  </div>
+</header>
+
+<!-- ============ 功能特性 ============ -->
+<section id="features">
+  <h2 class="sec-title reveal">功能特性</h2>
+  <p class="sec-sub reveal">一个启动器，装下你的整个 Minecraft 世界</p>
+  <div class="features">
+    <div class="feature reveal"><div class="ico">⬇️</div><h3>版本下载</h3><p>原版 + Forge / Fabric / Optifine / NeoForge / 基岩版，官方源与 BMCLAPI 镜像智能多源回退。</p></div>
+    <div class="feature reveal"><div class="ico">☕</div><h3>Java 自动管理</h3><p>按版本自动匹配 JRE 8 / 17 / 21 / 25，缺失时自动从镜像下载安装，无需手动配置。</p></div>
+    <div class="feature reveal"><div class="ico">🎮</div><h3>游戏启动</h3><p>版本隔离、内存设置、native 自动提取、启动参数全自动生成，一键进服。</p></div>
+    <div class="feature reveal"><div class="ico">👤</div><h3>账号管理</h3><p>离线 / 正版 Microsoft / 外置 Yggdrasil（authlib-injector）全支持。</p></div>
+    <div class="feature reveal"><div class="ico">🌐</div><h3>联机大厅</h3><p>房间创建、密码保护、局域网自动发现、UPnP 内网穿透，和朋友轻松联机。</p></div>
+    <div class="feature reveal"><div class="ico">🤖</div><h3>AI 助手</h3><p>内置免费 AI 通道，<b>无需任何 API 密钥</b>，开箱即用；支持 AI 测速自动选最快通道。</p><span class="tag">免费 · 免密钥</span></div>
+    <div class="feature reveal"><div class="ico">📋</div><h3>日志系统</h3><p>启动 / 下载 / Java / 联机 / AI / 账号全类别日志，实时过滤、一键导出。</p></div>
+    <div class="feature reveal"><div class="ico">🎨</div><h3>主题与配色</h3><p>深浅双主题随心切换，开发者配色工作室，打造专属外观。</p></div>
+  </div>
+</section>
+
+<!-- ============ AI 横幅 ============ -->
+<section id="ai" style="padding-top: 0;">
+  <div class="ai-banner reveal">
+    <div>
+      <h3>🤖 AI 助手 · 完全免费 · 无需 API 密钥</h3>
+      <p>内置多个免费 AI 通道，多模型自动切换；打开就能聊，Minecraft 问题有问必答。</p>
+    </div>
+    <div class="chips">
+      <span class="chip">⚡ AI 测速</span>
+      <span class="chip">🔑 零密钥</span>
+      <span class="chip">♾️ 自动重试排队</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 界面展示 ============ -->
+<section id="shots" style="padding-top: 30px;">
+  <h2 class="sec-title reveal">界面展示</h2>
+  <p class="sec-sub reveal">简洁直观的设计，每一页都为玩家打造</p>
+
+  <div class="shots-wrap reveal">
+    <div class="shot-tabs">
+      <button class="shot-tab active" data-i="0">🏠 主页</button>
+      <button class="shot-tab" data-i="1">🌐 联机大厅</button>
+      <button class="shot-tab" data-i="2">🤖 AI 助手</button>
+      <button class="shot-tab" data-i="3">📋 日志 / 记录</button>
+      <button class="shot-tab" data-i="4">ℹ️ 关于</button>
+    </div>
+
+    <div class="shot-stage">
+      <button class="shot-nav prev" aria-label="上一张">‹</button>
+      <button class="shot-nav next" aria-label="下一张">›</button>
+      <div class="shot-view">
+
+        <!-- ===== 1. 主页 ===== -->
+        <div class="shot active" data-i="0">
+          <div class="browser">
+            <div class="browser-bar"><i></i><i></i><i></i><span class="addr">nuo agent launcher · 主页</span></div>
+            <div class="browser-body">
+              <div class="app">
+                <div class="app-titlebar"><span>nuo agent launcher</span><span class="win-btns"><span>—</span><span>☐</span><span>✕</span></span></div>
+                <div class="app-main">
+                  <div class="side">
+                    <div class="brandline"><span class="nlogo">N</span><span class="bname">nuo agent<small>launcher</small></span></div>
+                    <div class="snav active">🏠 主页</div>
+                    <div class="snav">⬇ 下载</div>
+                    <div class="snav">🧩 模组</div>
+                    <div class="snav">👥 联机</div>
+                    <div class="snav">✨ AI 助手</div>
+                    <div class="snav">📄 日志/记录</div>
+                    <div class="snav">⚙️ 设置</div>
+                    <div class="snav">ℹ️ 关于</div>
+                    <div class="snav">&lt;/&gt; 开发者</div>
+                    <div class="snav">🎨 配色</div>
+                    <div class="devbadge">● 开发者模式</div>
+                    <div class="ver">v1.0.0</div>
+                  </div>
+                  <div class="mains">
+                    <div class="hero-app">
+                      <h2>nuo agent launcher</h2>
+                      <p>一键启动你的 Minecraft 世界 · 集成 Java 自动下载 · AI 助手 · 联机</p>
+                      <span class="btn-launch">▶ 启动游戏</span>
+                    </div>
+                    <div class="sel-card">
+                      <div class="sel-col"><label>游戏版本</label><div class="sel-box">未安装任何版本 <span>⌄</span></div><span class="mini-btn">管理版本 / 下载新版本</span></div>
+                      <div class="sel-col"><label>账号</label><div class="sel-box">未添加账号 <span>⌄</span></div><span class="mini-btn">管理账号</span></div>
+                    </div>
+                    <div class="quick4">
+                      <div class="qcard"><div class="qi">⬇</div><b>下载新版本</b><span>官方 + Forge / Fabric / Optifine</span></div>
+                      <div class="qcard"><div class="qi">👥</div><b>联机</b><span>创建或加入房间</span></div>
+                      <div class="qcard"><div class="qi">✨</div><b>AI 助手</b><span>免费 AI 对话</span></div>
+                      <div class="qcard"><div class="qi">📋</div><b>查看日志</b><span>下载、Java、启动记录</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== 2. 联机大厅 ===== -->
+        <div class="shot" data-i="1">
+          <div class="browser">
+            <div class="browser-bar"><i></i><i></i><i></i><span class="addr">nuo agent launcher · 联机大厅</span></div>
+            <div class="browser-body">
+              <div class="app">
+                <div class="app-titlebar"><span>nuo agent launcher</span><span class="win-btns"><span>—</span><span>☐</span><span>✕</span></span></div>
+                <div class="page-pad">
+                  <div class="h1line">联机大厅</div>
+                  <div class="mtabs"><span class="mtab active">创建房间</span><span class="mtab">加入房间</span><span class="mtab">已发现房间</span></div>
+                  <div class="form-card">
+                    <h3>创建房间</h3>
+                    <div class="fgrid">
+                      <div class="fl"><label>房间名称 <em>*</em></label><div class="fin">例如：快乐联机</div></div>
+                      <div class="fl"><label>房间号 / 房间代码</label><div class="fin">留空自动生成</div></div>
+                      <div class="fl"><label>房间密码</label><div class="fin">（可选）</div></div>
+                      <div class="fl"><label>最大玩家数</label><div class="fin" style="color:var(--text)">8</div></div>
+                      <div class="fl"><label>游戏版本 <em>*</em></label><div class="fin">未安装任何版本 ⌄</div></div>
+                      <div class="fl"><label>游戏端口</label><div class="fin" style="color:var(--text)">25565</div></div>
+                    </div>
+                    <span class="flink">前往下载版本 →</span>
+                    <div class="fl" style="margin-bottom:12px"><label>房间描述</label><div class="fin" style="height:44px">（可选）房间简介</div></div>
+                    <span class="fbtn">创建并启动游戏</span><span class="fnote">· 房间创建后将开始监听局域网发现，房主可在游戏内 "Open to LAN" 让其他玩家加入</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== 3. AI 助手 ===== -->
+        <div class="shot" data-i="2">
+          <div class="browser">
+            <div class="browser-bar"><i></i><i></i><i></i><span class="addr">nuo agent launcher · AI 助手</span></div>
+            <div class="browser-body">
+              <div class="app">
+                <div class="ai-head">
+                  <div><b>✨ AI 助手</b><div class="sub">内置免费 AI 通道 · 无需 API 密钥 · 开箱即用</div></div>
+                  <div class="ai-acts"><span class="ai-act">⚡ AI 测速</span><span class="ai-act">清空对话</span></div>
+                </div>
+                <div class="ai-body">
+                  <span class="ai-spark">✨</span>
+                  <b>你好！我是 nuo agent launcher 的 AI 助手</b>
+                  <div class="sub">内置免费 AI 通道 · 开箱即用 · 询问任何 Minecraft 或启动器相关的问题</div>
+                  <div class="ai-grid">
+                    <div class="ai-q">› Minecraft 1.21 推荐什么模组?</div>
+                    <div class="ai-q">› 如何在 Minecraft 中合成蛋糕?</div>
+                    <div class="ai-q">› 如何在 PCL/nuo agent launcher 中下载 Forge?</div>
+                    <div class="ai-q">› 解释 Java 8 / 17 / 21 在 Minecraft 中的区别</div>
+                    <div class="ai-q">› 帮我写一个 Minecraft 命令方块脚本</div>
+                    <div class="ai-q">› 解释 Minecraft 1.20 的红石更新</div>
+                  </div>
+                </div>
+                <div class="ai-input"><div class="box">向 AI 助手提问（支持 Markdown，按 Enter 发送，Shift+Enter 换行）</div><span class="ai-send">发送</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== 4. 日志 / 记录 ===== -->
+        <div class="shot" data-i="3">
+          <div class="browser">
+            <div class="browser-bar"><i></i><i></i><i></i><span class="addr">nuo agent launcher · 日志 / 记录</span></div>
+            <div class="browser-body">
+              <div class="app">
+                <div class="app-titlebar"><span></span><span></span></div>
+                <div class="log-head"><b>📋 日志 / 记录</b><div class="log-acts"><span class="ai-act">↻ 刷新</span><span class="ai-act">导出</span><span class="ai-act">清空</span></div></div>
+                <div class="log-tabbar">
+                  <span class="log-tab active">🚀 启动日志</span><span class="log-tab">L 下载日志</span><span class="log-tab">☕ Java 日志</span><span class="log-tab">👥 联机日志</span><span class="log-tab">✨ AI 日志</span><span class="log-tab">👤 账号日志</span><span class="log-tab">⚙️ 系统日志</span>
+                </div>
+                <div class="log-filter">
+                  <div class="fin">过滤关键字...</div>
+                  <div class="fin" style="flex:0 0 120px">全部级别 ⌄</div>
+                  <span style="font-size:10px;color:var(--text2)">☑ 自动滚动</span>
+                  <span style="font-size:10px;color:var(--text3)">共 0 条</span>
+                </div>
+                <div class="log-empty">暂无日志</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== 5. 关于 ===== -->
+        <div class="shot" data-i="4">
+          <div class="browser">
+            <div class="browser-bar"><i></i><i></i><i></i><span class="addr">nuo agent launcher · 关于</span></div>
+            <div class="browser-body">
+              <div class="app">
+                <div class="app-titlebar"><span></span><span></span></div>
+                <div class="about-hero">
+                  <div class="about-n">N</div>
+                  <b>nuo agent launcher</b>
+                  <div class="sub">功能丰富的 Minecraft 启动器 · v1.0.0</div>
+                  <div class="about-btns"><span class="pri">检查更新</span><span class="gho">访问 Minecraft 官网</span></div>
+                </div>
+                <div class="about-card">
+                  <h3>功能特性</h3>
+                  <div class="about-grid">
+                    <div class="about-it"><b>版本下载</b><span>原版 + Forge / Fabric / Optifine / NeoForge，BMCLAPI 镜像加速</span></div>
+                    <div class="about-it"><b>Java 自动管理</b><span>按版本自动选择 JRE 8/17/21，缺失时一键下载安装</span></div>
+                    <div class="about-it"><b>游戏启动</b><span>版本隔离、内存设置、native 提取、启动参数自动生成</span></div>
+                    <div class="about-it"><b>账号管理</b><span>离线 / 正版 Microsoft / 外置 Yggdrasil（authlib-injector）</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="shot-progress run" id="shotProgress"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 更新日志（实时拉取 GitHub Releases） ============ -->
+<section id="changelog">
+  <h2 class="sec-title reveal">更新日志</h2>
+  <p class="sec-sub reveal">以下内容实时来自 GitHub Releases · 展示所有已发布版本</p>
+  <div class="cl-wrap">
+    <div class="cl-loading" id="clLoading"><span class="spinner" style="display:inline-block;width:18px;height:18px;border:2.5px solid var(--accent);border-top-color:transparent;border-radius:50%;vertical-align:middle;animation:clSpin .8s linear infinite;margin-right:8px;"></span>正在获取最新版本信息...</div>
+    <div class="cl-list" id="clList" style="display:none;"></div>
+    <div class="cl-more" id="clMore" style="display:none;">
+      <a href="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases" target="_blank" rel="noopener">在 GitHub 查看全部版本 →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 下载 ============ -->
+<section id="download" class="dl-section">
+  <h2 class="sec-title reveal">下载启动器</h2>
+  <p class="sec-sub reveal" id="dlSub">v1.1.0 · Windows 10 / 11 · x64 · 完全免费 · 开源</p>
+  <div class="dl-cards">
+    <div class="dl-card reveal">
+      <div class="rec">推荐</div>
+      <div class="ic">🎒</div>
+      <h3>便携版</h3>
+      <div class="meta">免安装 · 双击即用 · 适合 U 盘携带<br />约 68 MB</div>
+      <a class="btn-big btn-primary" id="dlPortable" href="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" target="_blank" rel="noopener">⬇ 立即下载</a>
+    </div>
+    <div class="dl-card reveal">
+      <div class="ic">📦</div>
+      <h3>安装版</h3>
+      <div class="meta">安装向导 · 可选安装目录 · 桌面快捷方式<br />约 68 MB</div>
+      <a class="btn-big btn-plain" id="dlSetup" href="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" target="_blank" rel="noopener">⬇ 立即下载</a>
+    </div>
+  </div>
+  <p class="dl-note reveal">安装包托管在 <b>GitHub Releases</b>，永久有效 · 启动器内置自动更新检测 · <b>AI 助手无需任何 API 密钥</b></p>
+</section>
+
+<footer>
+  <div class="foot-brand"><span class="logo">N</span> nuo agent launcher</div>
+  <div>nuo agent launcher · 让 Minecraft 启动更简单</div>
+  <div style="margin-top:6px;">本工具与 Mojang Studios / Microsoft 无官方关联 · Minecraft 是 Mojang Studios 的商标</div>
+</footer>
+
+<script>
+  // 滚动显现
+  const io = new IntersectionObserver((es) => {
+    es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); } })
+  }, { threshold: 0.12 })
+  document.querySelectorAll('.reveal').forEach((el, i) => {
+    el.style.transitionDelay = (i % 4) * 90 + 'ms'
+    io.observe(el)
+  })
+
+  // 截图画廊：自动轮播 + 手动切换
+  const shots = [...document.querySelectorAll('.shot')]
+  const tabs = [...document.querySelectorAll('.shot-tab')]
+  const prog = document.getElementById('shotProgress')
+  let cur = 0, timer = null
+  function go(i) {
+    cur = (i + shots.length) % shots.length
+    shots.forEach((s, k) => s.classList.toggle('active', k === cur))
+    tabs.forEach((t, k) => t.classList.toggle('active', k === cur))
+    prog.classList.remove('run'); void prog.offsetWidth; prog.classList.add('run')
+    clearInterval(timer); timer = setInterval(() => go(cur + 1), 6000)
+  }
+  tabs.forEach((t) => t.addEventListener('click', () => go(+t.dataset.i)))
+  document.querySelector('.shot-nav.prev').addEventListener('click', () => go(cur - 1))
+  document.querySelector('.shot-nav.next').addEventListener('click', () => go(cur + 1))
+  // 悬停暂停自动轮播
+  const stage = document.querySelector('.shot-stage')
+  stage.addEventListener('mouseenter', () => { clearInterval(timer); prog.style.animationPlayState = 'paused' })
+  stage.addEventListener('mouseleave', () => {
+    prog.style.animationPlayState = 'running'
+    timer = setInterval(() => go(cur + 1), 6000)
+  })
+  go(0)
+
+  // Hero 视差：像素方块随鼠标轻微移动
+  const cubes = document.querySelector('.cubes')
+  document.addEventListener('mousemove', (e) => {
+    const dx = (e.clientX / innerWidth - 0.5) * 26
+    const dy = (e.clientY / innerHeight - 0.5) * 26
+    cubes.style.transform = `translate(${dx}px, ${dy}px)`
+    cubes.style.transition = 'transform .35s ease-out'
+  })
+
+  /* ============ 实时更新日志 / 下载链接（GitHub Releases API） ============ */
+  const REPO_API = 'https://api.github.com/repos/nuoagentlauncher/nuo-agent-launcher/releases?per_page=100'
+  const escapeHtml = (s) => String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;')
+  // 极简 Markdown：标题 / 粗体 / 列表 / 链接 / 段落
+  function mdToHtml(md) {
+    if (!md) return ''
+    const lines = md.replace(/\r/g, '').split('\n')
+    let html = '', inList = false
+    const inline = (t) => escapeHtml(t)
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      .replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>')
+      .replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+    for (const raw of lines) {
+      const line = raw.trim()
+      if (!line) { if (inList) { html += '</ul>'; inList = false } continue }
+      const h = line.match(/^(#{1,4})\s+(.*)$/)
+      const li = line.match(/^[-*]\s+(.*)$/)
+      if (h) {
+        if (inList) { html += '</ul>'; inList = false }
+        html += `<h${h[1].length + 2}>${inline(h[2])}</h${h[1].length + 2}>`
+      } else if (li) {
+        if (!inList) { html += '<ul>'; inList = true }
+        html += `<li>${inline(li[1])}</li>`
+      } else {
+        if (inList) { html += '</ul>'; inList = false }
+        html += `<p>${inline(line)}</p>`
+      }
+    }
+    if (inList) html += '</ul>'
+    return html
+  }
+  const fmtSize = (b) => b >= 1048576 ? (b / 1048576).toFixed(0) + ' MB' : (b / 1024).toFixed(0) + ' KB'
+  const fmtDate = (iso) => iso ? new Date(iso).toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }) : ''
+  const stripV = (t) => String(t || '').replace(/^v/, '')
+
+  // 把下载按钮指向最新版本的对应 exe 资源
+  function bindLatestAssets(latest) {
+    if (!latest) return
+    const assets = latest.assets || []
+    const portable = assets.find((a) => /便携|portable/i.test(a.name))
+    const setup = assets.find((a) => /安装|setup|nsis/i.test(a.name))
+    const setHref = (id, a) => { if (a) { const el = document.getElementById(id); if (el) { el.href = a.browser_download_url; el.removeAttribute('download'); } } }
+    setHref('heroPortable', portable); setHref('dlPortable', portable)
+    setHref('heroSetup', setup); setHref('dlSetup', setup)
+    const ver = 'v' + stripV(latest.tag_name)
+    const hv = document.getElementById('heroVersion'); if (hv) hv.textContent = ver
+    const ds = document.getElementById('dlSub'); if (ds) ds.textContent = `${ver} · Windows 10 / 11 · x64 · 完全免费 · 开源`
+  }
+
+  function renderChangelog(list) {
+    const loading = document.getElementById('clLoading')
+    const box = document.getElementById('clList')
+    const more = document.getElementById('clMore')
+    loading.style.display = 'none'
+    const valid = (list || []).filter((r) => !r.draft)
+    if (!valid.length) {
+      loading.innerHTML = '暂无已发布版本，敬请期待。'
+      loading.style.display = 'block'
+      return
+    }
+    bindLatestAssets(valid[0])
+    box.innerHTML = valid.slice(0, 8).map((r, i) => {
+      const ver = 'v' + stripV(r.tag_name)
+      const tags = (i === 0 ? '<span class="cl-latest">最新</span>' : '') +
+        (r.prerelease ? '<span class="cl-pre">预览版</span>' : '')
+      const assets = (r.assets || []).map((a) =>
+        `<a href="${a.browser_download_url}" target="_blank" rel="noopener">⬇ ${escapeHtml(a.name)} · ${fmtSize(a.size)}</a>`).join('')
+      return `<div class="cl-item">
+        <div class="cl-head">
+          <span class="cl-ver">${ver}</span>${tags}
+          <span class="cl-date">${fmtDate(r.published_at)}</span>
+        </div>
+        ${r.name && r.name !== r.tag_name ? `<div class="cl-name">${escapeHtml(r.name)}</div>` : ''}
+        <div class="cl-body">${mdToHtml(r.body || '')}</div>
+        ${assets ? `<div class="cl-assets">${assets}</div>` : ''}
+      </div>`
+    }).join('')
+    box.style.display = 'block'
+    if (valid.length > 8) more.style.display = 'block'
+    // 滚动显现
+    box.querySelectorAll('.cl-item').forEach((el, i) => {
+      setTimeout(() => el.classList.add('on'), 120 + i * 110)
+    })
+  }
+
+  fetch(REPO_API, { headers: { Accept: 'application/vnd.github+json' } })
+    .then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json() })
+    .then(renderChangelog)
+    .catch((err) => {
+      const loading = document.getElementById('clLoading')
+      loading.innerHTML = `更新日志暂时无法加载（网络原因）。<br><a href="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases" target="_blank" rel="noopener" style="color:var(--accent);font-weight:600;">点此前往 GitHub Releases 查看 →</a>`
+      console.warn('Changelog fetch failed:', err)
+    })
+</script>
+</body>
+</html>
