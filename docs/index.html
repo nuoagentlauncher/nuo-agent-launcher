@@ -461,8 +461,8 @@
   <h1>nuo agent launcher</h1>
   <p class="sub">一键启动你的 Minecraft 世界 —— 集成 Java 自动下载 · 基岩版支持 · 免费免密钥 AI 助手 · 联机大厅 · 自动更新</p>
   <div class="hero-btns">
-    <a class="btn-big btn-primary" id="heroPortable" href="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" target="_blank" rel="noopener">⬇ 下载便携版</a>
-    <a class="btn-big btn-plain" id="heroSetup" href="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" target="_blank" rel="noopener">⬇ 下载安装版</a>
+    <a class="btn-big btn-primary" id="heroPortable" data-dl="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" href="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" target="_blank" rel="noopener">⬇ 下载便携版</a>
+    <a class="btn-big btn-plain" id="heroSetup" data-dl="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" href="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" target="_blank" rel="noopener">⬇ 下载安装版</a>
   </div>
   <div class="hero-meta">
     <span>✅ 免费开源</span><span>🤖 AI 无需密钥 开箱即用</span><span>☕ Java 全自动管理</span><span>🌐 官方源 + 国内镜像加速</span>
@@ -697,19 +697,30 @@
 <section id="download" class="dl-section">
   <h2 class="sec-title reveal">下载启动器</h2>
   <p class="sec-sub reveal" id="dlSub">v1.1.0 · Windows 10 / 11 · x64 · 完全免费 · 开源</p>
+  <div class="mirror-bar reveal" style="display:flex;align-items:center;justify-content:center;gap:10px;margin:18px 0 4px;flex-wrap:wrap;">
+    <label for="mirrorSel" style="font-size:13.5px;color:var(--text-dim,#9aa4b2);">下载线路：</label>
+    <select id="mirrorSel" style="background:rgba(255,255,255,.06);color:inherit;border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:6px 10px;font-size:13.5px;outline:none;">
+      <option value="">官方直连（GitHub）</option>
+      <option value="https://ghfast.top/">镜像加速 · GHFast</option>
+      <option value="https://gh-proxy.com/">镜像加速 · GH-Proxy</option>
+      <option value="https://ghproxy.net/">镜像加速 · GHProxy.NET</option>
+      <option value="https://hub.gitmirror.com/">镜像加速 · GitMirror</option>
+    </select>
+    <span style="font-size:12.5px;color:var(--text-dim,#8a94a3);">GitHub 直连慢？选一个镜像线路下载更快</span>
+  </div>
   <div class="dl-cards">
     <div class="dl-card reveal">
       <div class="rec">推荐</div>
       <div class="ic">🎒</div>
       <h3>便携版</h3>
       <div class="meta">免安装 · 双击即用 · 适合 U 盘携带<br />约 68 MB</div>
-      <a class="btn-big btn-primary" id="dlPortable" href="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" target="_blank" rel="noopener">⬇ 立即下载</a>
+      <a class="btn-big btn-primary" id="dlPortable" data-dl="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" href="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" target="_blank" rel="noopener">⬇ 立即下载</a>
     </div>
     <div class="dl-card reveal">
       <div class="ic">📦</div>
       <h3>安装版</h3>
       <div class="meta">安装向导 · 可选安装目录 · 桌面快捷方式<br />约 68 MB</div>
-      <a class="btn-big btn-plain" id="dlSetup" href="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" target="_blank" rel="noopener">⬇ 立即下载</a>
+      <a class="btn-big btn-plain" id="dlSetup" data-dl="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" href="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" target="_blank" rel="noopener">⬇ 立即下载</a>
     </div>
   </div>
   <p class="dl-note reveal">安装包托管在 <b>GitHub Releases</b>，永久有效 · 启动器内置自动更新检测 · <b>AI 助手无需任何 API 密钥</b></p>
@@ -807,13 +818,39 @@
     const assets = latest.assets || []
     const portable = assets.find((a) => /便携|portable/i.test(a.name))
     const setup = assets.find((a) => /安装|setup|nsis/i.test(a.name))
-    const setHref = (id, a) => { if (a) { const el = document.getElementById(id); if (el) { el.href = a.browser_download_url; el.removeAttribute('download'); } } }
+    const setHref = (id, a) => {
+      if (!a) return
+      const el = document.getElementById(id)
+      if (el) { el.dataset.dl = a.browser_download_url; el.removeAttribute('download'); applyMirror() }
+    }
     setHref('heroPortable', portable); setHref('dlPortable', portable)
     setHref('heroSetup', setup); setHref('dlSetup', setup)
     const ver = 'v' + stripV(latest.tag_name)
     const hv = document.getElementById('heroVersion'); if (hv) hv.textContent = ver
     const ds = document.getElementById('dlSub'); if (ds) ds.textContent = `${ver} · Windows 10 / 11 · x64 · 完全免费 · 开源`
   }
+
+  /* ============ 下载镜像切换 ============ */
+  // 所有下载链接带 data-dl（GitHub 原始地址），选择镜像后统一加前缀，选择存 localStorage
+  const MIRROR_STORAGE_KEY = 'nal_download_mirror'
+  function applyMirror() {
+    const sel = document.getElementById('mirrorSel')
+    const prefix = (sel && sel.value) || ''
+    document.querySelectorAll('a[data-dl]').forEach((a) => {
+      a.href = prefix + a.dataset.dl
+    })
+  }
+  (function initMirror() {
+    const sel = document.getElementById('mirrorSel')
+    if (!sel) return
+    try { sel.value = localStorage.getItem(MIRROR_STORAGE_KEY) || '' } catch {}
+    if (sel.value && !sel.querySelector(`option[value="${CSS.escape(sel.value)}"]`)) sel.value = ''
+    sel.addEventListener('change', () => {
+      try { localStorage.setItem(MIRROR_STORAGE_KEY, sel.value) } catch {}
+      applyMirror()
+    })
+    applyMirror()
+  })()
 
   function renderChangelog(list) {
     const loading = document.getElementById('clLoading')
@@ -832,7 +869,7 @@
       const tags = (i === 0 ? '<span class="cl-latest">最新</span>' : '') +
         (r.prerelease ? '<span class="cl-pre">预览版</span>' : '')
       const assets = (r.assets || []).map((a) =>
-        `<a href="${a.browser_download_url}" target="_blank" rel="noopener">⬇ ${escapeHtml(a.name)} · ${fmtSize(a.size)}</a>`).join('')
+        `<a data-dl="${escapeHtml(a.browser_download_url)}" href="${escapeHtml(a.browser_download_url)}" target="_blank" rel="noopener">⬇ ${escapeHtml(a.name)} · ${fmtSize(a.size)}</a>`).join('')
       return `<div class="cl-item">
         <div class="cl-head">
           <span class="cl-ver">${ver}</span>${tags}

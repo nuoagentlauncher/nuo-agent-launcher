@@ -125,13 +125,17 @@ contextBridge.exposeInMainWorld('nal', {
     getAppDir: () => invoke('sys:appdir'),
     pickDirectory: () => invoke('sys:pickdir'),
   },
-  // 更新检测（GitHub Releases）
+  // 更新检测 + 自动更新（GitHub Releases）
   updater: {
     check: (silent) => invoke('updater:check', { silent: silent !== false }),
     releases: () => invoke('updater:releases'),
     openReleases: () => invoke('updater:open-releases'),
     openUrl: (url) => invoke('updater:open-url', url),
+    downloadAndInstall: () => invoke('updater:download-install'),
+    cancelDownload: () => invoke('updater:cancel-download'),
+    variant: () => invoke('updater:variant'),
     onUpdateAvailable: (cb) => onEvent('updater:available', cb),
+    onDownloadProgress: (cb) => onEvent('updater:download-progress', cb),
   },
 })
 

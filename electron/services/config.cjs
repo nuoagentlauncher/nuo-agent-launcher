@@ -32,6 +32,8 @@ const DEFAULT_CONFIG = {
   showSnapshotVersions: false,
   // 启动器更新通道
   updateChannel: 'stable',
+  // 启动器更新下载镜像：auto（自动测速）/ direct（官方直连）/ 镜像名（见 updater.cjs MIRRORS）
+  updateMirror: 'auto',
 }
 
 function loadConfig() {

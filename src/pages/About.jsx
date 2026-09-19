@@ -1,7 +1,9 @@
 // 关于页面：版本信息、功能列表、开源声明、真实更新检查、更新日志
 import { useEffect, useState } from 'react'
+import { useUpdaterStore, isDownloading } from '../stores/updater.js'
+import pkg from '../../package.json'
 
-const APP_VERSION = '1.1.0'
+const APP_VERSION = pkg.version
 
 const FEATURES = [
   { name: '版本下载', desc: '原版 + Forge / Fabric / Optifine / NeoForge，BMCLAPI 镜像加速' },
@@ -11,7 +13,7 @@ const FEATURES = [
   { name: '联机功能', desc: '房间创建、密码、局域网发现、UPnP 内网穿透' },
   { name: 'AI 助手', desc: '内置免费 AI 通道，无需 API 密钥，支持 AI 测速自动选最快通道' },
   { name: '日志系统', desc: '启动 / 下载 / Java / 联机 / AI 全类别日志，可导出' },
-  { name: '自动更新', desc: '基于 GitHub Releases，启动自动检测新版，一键前往下载' },
+  { name: '自动更新', desc: '基于 GitHub Releases，自动检测新版、镜像加速下载、一键安装' },
 ]
 
 // 简单 Markdown 渲染（更新日志正文：标题、列表、粗体、链接）
@@ -47,6 +49,9 @@ export default function AboutPage() {
   const [releases, setReleases] = useState(null)
   const [releasesLoading, setReleasesLoading] = useState(false)
   const [releasesError, setReleasesError] = useState('')
+  const [updateError, setUpdateError] = useState('')
+  const download = useUpdaterStore((s) => s.download)
+  const downloading = isDownloading(download)
 
   useEffect(() => {
     window.nal.system.getAppDir().then(setAppDir).catch(() => {})
@@ -91,6 +96,19 @@ export default function AboutPage() {
 
   const fmtDate = (iso) => iso ? new Date(iso).toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }) : ''
 
+  const fmtSpeed = (b) => {
+    if (!b) return ''
+    if (b >= 1024 * 1024) return `${(b / 1048576).toFixed(1)} MB/s`
+    return `${(b / 1024).toFixed(0)} KB/s`
+  }
+
+  // 一键更新：应用内下载（镜像加速）并自动安装
+  const handleUpdateNow = async () => {
+    setUpdateError('')
+    const res = await window.nal.updater?.downloadAndInstall?.().catch((e) => ({ success: false, error: e.message }))
+    if (!res?.success) setUpdateError(res?.error || '更新失败，请稍后重试')
+  }
+
   return (
     <div className="scroll-y" style={{ height: '100%', padding: '32px' }}>
       <div style={{ maxWidth: 960, margin: '0 auto' }}>
@@ -123,7 +141,7 @@ export default function AboutPage() {
               {check.message}
             </div>
           )}
-          {/* 发现新版时展示下载入口 */}
+          {/* 发现新版时展示一键更新 + 备用下载入口 */}
           {check.status === 'available' && check.result?.release && (
             <div style={{ marginTop: 16, padding: 16, background: 'var(--bg-tertiary)', borderRadius: 'var(--radius)', textAlign: 'left' }}>
               <div style={{ fontWeight: 600, marginBottom: 8 }}>
@@ -132,9 +150,42 @@ export default function AboutPage() {
               <div style={{ maxHeight: 160, overflowY: 'auto', marginBottom: 12 }}>
                 {renderNotes(check.result.release.notes)}
               </div>
+
+              {/* 一键更新：自动下载（镜像加速）并安装 */}
+              <div className="flex" style={{ gap: 8, marginBottom: 10, flexWrap: 'wrap' }}>
+                <button className="btn btn-primary" onClick={handleUpdateNow} disabled={downloading}>
+                  {downloading ? <><span className="spinner" />更新中...</> : '⚡ 一键更新（自动下载并安装）'}
+                </button>
+                {downloading && ['check', 'probe', 'download'].includes(download?.phase) && (
+                  <button className="btn btn-ghost" onClick={() => window.nal.updater.cancelDownload()}>取消</button>
+                )}
+              </div>
+
+              {/* 下载进度 */}
+              {downloading && download && (
+                <div style={{ marginBottom: 12 }}>
+                  <div className="flex text-sm" style={{ justifyContent: 'space-between', gap: 10, marginBottom: 4 }}>
+                    <span style={{ color: 'var(--text-secondary)' }}>{download.message || '正在准备...'}</span>
+                    <span className="text-tertiary" style={{ flexShrink: 0 }}>
+                      {download.total
+                        ? `${fmtSize(download.received)} / ${fmtSize(download.total)}${download.speed ? ` · ${fmtSpeed(download.speed)}` : ''}`
+                        : download.received ? `${fmtSize(download.received)}${download.speed ? ` · ${fmtSpeed(download.speed)}` : ''}` : ''}
+                    </span>
+                  </div>
+                  <div style={{ height: 8, background: 'var(--bg-secondary)', borderRadius: 999, overflow: 'hidden' }}>
+                    <div style={{ height: '100%', width: `${Math.max(3, download.percent || 0)}%`, background: 'var(--accent)', borderRadius: 999, transition: 'width .3s ease' }} />
+                  </div>
+                </div>
+              )}
+              {updateError && !downloading && (
+                <div className="text-sm" style={{ color: 'var(--error)', marginBottom: 8 }}>更新失败：{updateError}</div>
+              )}
+
+              {/* 备用：浏览器手动下载 */}
+              <div className="text-xs text-tertiary" style={{ marginBottom: 6 }}>或者用浏览器手动下载：</div>
               <div className="flex" style={{ gap: 8, flexWrap: 'wrap' }}>
                 {check.result.release.assets.map((a) => (
-                  <button key={a.name} className="btn btn-primary btn-sm" onClick={() => window.nal.updater.openUrl(a.url)}>
+                  <button key={a.name} className="btn btn-ghost btn-sm" onClick={() => window.nal.updater.openUrl(a.url)}>
                     ⬇ {a.name} {a.size ? `(${fmtSize(a.size)})` : ''}
                   </button>
                 ))}

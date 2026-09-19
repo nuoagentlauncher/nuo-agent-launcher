@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Routes, Route, NavLink, useNavigate } from 'react-router-dom'
+import { Routes, Route, NavLink } from 'react-router-dom'
 import HomePage from './pages/Home.jsx'
 import DownloadPage from './pages/Download.jsx'
 import ModsPage from './pages/Mods.jsx'
@@ -12,9 +12,11 @@ import DeveloperPage from './pages/Developer.jsx'
 import ColorsPage from './pages/Colors.jsx'
 import { applyCustomColors } from './utils/themeColors.js'
 import { useConfigStore } from './stores/config.js'
+import { useUpdaterStore, isDownloading } from './stores/updater.js'
+import pkg from '../package.json'
 
-// 当前客户端版本（与 package.json 保持一致）
-const APP_VERSION = '1.1.0'
+// 当前客户端版本（直接读 package.json，避免手动同步遗漏）
+const APP_VERSION = pkg.version
 
 const BASE_NAV_ITEMS = [
   { to: '/', label: '主页', icon: 'home' },
@@ -111,11 +113,16 @@ function NavItem({ to, label, icon, end }) {
 }
 
 export default function App() {
-  const navigate = useNavigate()
   const [ready, setReady] = useState(false)
   const [appDir, setAppDir] = useState('')
-  const [updateInfo, setUpdateInfo] = useState(null)
+  const [updateError, setUpdateError] = useState('')
   const config = useConfigStore()
+  const updateInfo = useUpdaterStore((s) => s.updateInfo)
+  const clearUpdate = useUpdaterStore((s) => s.clearUpdate)
+  const setUpdateInfo = useUpdaterStore((s) => s.setUpdateInfo)
+  const download = useUpdaterStore((s) => s.download)
+  const setDownload = useUpdaterStore((s) => s.setDownload)
+  const downloading = isDownloading(download)
   // 主题直接从 config store 读取，切换时实时响应
   const theme = useConfigStore((s) => s.config?.theme) || 'dark'
   // 开发者模式：开启后导航栏在“开发者”后面追加“配色”菜单项
@@ -146,13 +153,29 @@ export default function App() {
     document.documentElement.setAttribute('data-theme', theme)
   }, [theme])
 
-  // 监听主进程启动时静默检查到的新版本
+  // 监听主进程启动时静默检查到的新版本 + 自更新下载进度
   useEffect(() => {
     const unsub = window.nal.updater?.onUpdateAvailable?.((info) => {
       if (info?.hasUpdate) setUpdateInfo(info)
     })
-    return () => unsub?.()
+    const unsubProgress = window.nal.updater?.onDownloadProgress?.((d) => {
+      if (d) setDownload(d)
+    })
+    return () => { unsub?.(); unsubProgress?.() }
   }, [])
+
+  // 横幅"一键更新"：应用内下载并自动安装
+  const handleUpdateNow = async () => {
+    setUpdateError('')
+    const res = await window.nal.updater?.downloadAndInstall?.().catch((e) => ({ success: false, error: e.message }))
+    if (!res?.success) setUpdateError(res?.error || '更新失败，请稍后重试')
+  }
+
+  const fmtSpeed = (b) => {
+    if (!b) return ''
+    if (b >= 1024 * 1024) return `${(b / 1048576).toFixed(1)} MB/s`
+    return `${(b / 1024).toFixed(0)} KB/s`
+  }
 
   // 应用自定义配色（通过注入 <style>：强调色全局生效，背景类仅深色主题生效）
   const customColors = useConfigStore((s) => s.config?.customColors)
@@ -215,14 +238,33 @@ export default function App() {
               </div>
             </div>
             <div className="update-banner-actions">
-              <button
-                className="btn btn-primary btn-sm"
-                onClick={() => { navigate('/about'); setUpdateInfo(null) }}
-              >
-                立即更新
-              </button>
-              <button className="btn btn-ghost btn-sm" onClick={() => setUpdateInfo(null)}>稍后</button>
+              {downloading ? (
+                <>
+                  <div style={{ minWidth: 200 }}>
+                    <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'flex', justifyContent: 'space-between', gap: 10 }}>
+                      <span>{download?.message || '正在准备更新...'}</span>
+                      <span style={{ color: 'var(--text-tertiary)', flexShrink: 0 }}>
+                        {download?.speed ? fmtSpeed(download.speed) : ''}
+                      </span>
+                    </div>
+                    <div style={{ height: 6, background: 'var(--bg-tertiary)', borderRadius: 999, overflow: 'hidden' }}>
+                      <div style={{ height: '100%', width: `${Math.max(3, download?.percent || 0)}%`, background: 'var(--accent)', borderRadius: 999, transition: 'width .3s ease' }} />
+                    </div>
+                  </div>
+                  {['check', 'probe', 'download'].includes(download?.phase) && (
+                    <button className="btn btn-ghost btn-sm" onClick={() => window.nal.updater.cancelDownload()}>取消</button>
+                  )}
+                </>
+              ) : (
+                <>
+                  <button className="btn btn-primary btn-sm" onClick={handleUpdateNow}>一键更新</button>
+                  <button className="btn btn-ghost btn-sm" onClick={clearUpdate}>稍后</button>
+                </>
+              )}
             </div>
+            {updateError && !downloading && (
+              <div className="text-xs" style={{ color: 'var(--error)', width: '100%', marginTop: 4 }}>{updateError}</div>
+            )}
           </div>
         )}
         <Routes>

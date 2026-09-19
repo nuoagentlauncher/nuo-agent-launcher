@@ -94,6 +94,17 @@ function GeneralSection({ config, update }) {
         </select>
       </Field>
 
+      <Field label="启动器更新镜像" hint="下载启动器自身更新包时使用的线路，自动测速会选最快的">
+        <select className="select" value={config.updateMirror || 'auto'} onChange={(e) => update('updateMirror', e.target.value)} style={{ maxWidth: 280 }}>
+          <option value="auto">自动测速（推荐）</option>
+          <option value="ghfast">GHFast 镜像</option>
+          <option value="ghproxy">GH-Proxy 镜像</option>
+          <option value="ghproxynet">GHProxy.NET 镜像</option>
+          <option value="gitmirror">GitMirror 镜像</option>
+          <option value="direct">官方直连</option>
+        </select>
+      </Field>
+
       <Field label="启动时显示快照版本">
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" checked={config.showSnapshotVersions || false} onChange={(e) => update('showSnapshotVersions', e.target.checked)} />
