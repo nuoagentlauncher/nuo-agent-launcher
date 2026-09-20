@@ -351,21 +351,19 @@ function downloadTo(url, destPath, onProgress, isCancelled) {
 
 // 生成"等待进程退出后执行"的批处理脚本（内容纯 ASCII，路径经环境变量传入，规避中文/空格路径编码问题）
 function writeUpdateScript(variant, installerPath) {
-  const wait = [
-    ':waitloop',
-    'tasklist /FI "PID eq %NAL_PID%" | find "%NAL_PID%" >nul',
-    'if not errorlevel 1 (',
-    '  ping -n 2 127.0.0.1 >nul',
-    '  goto waitloop',
-    ')',
-    'ping -n 3 127.0.0.1 >nul',
+  // 等待 PID 退出：用 PowerShell 轮询（不能用 `tasklist | find` 管道——
+  // detached 无控制台启动时管道会返回 STATUS_CONTROL_C_EXIT(负数)，导致等待判断死循环）
+  const waitForExit = [
+    'powershell -NoProfile -ExecutionPolicy Bypass -Command "while (Get-Process -Id %NAL_PID% -ErrorAction SilentlyContinue) { Start-Sleep -Milliseconds 600 }"',
   ]
+  // 自删：(goto) 先结束批处理上下文再 del，避免"找不到批处理文件"的噪音
+  const selfDelete = '(goto) 2>nul & del /q "%~f0"'
   let lines
   if (variant === 'portable') {
     // 便携版：旧 exe 改名为 .old（运行中的 exe 允许改名不允许覆盖）→ 新 exe 移入原位 → 启动新版 → 脚本自删
     lines = [
       '@echo off',
-      ...wait,
+      ...waitForExit,
       'set ATTEMPT=0',
       ':retry',
       'move /y "%NAL_TARGET%" "%NAL_TARGET%.old" >nul 2>&1',
@@ -377,20 +375,17 @@ function writeUpdateScript(variant, installerPath) {
       ':replace',
       'move /y "%NAL_NEW_EXE%" "%NAL_TARGET%" >nul 2>&1',
       'if exist "%NAL_TARGET%" start "" "%NAL_TARGET%"',
-      'del /q "%~f0" >nul 2>&1',
-      'exit /b',
+      selfDelete,
       ':giveup',
-      'del /q "%~f0" >nul 2>&1',
-      'exit /b',
+      selfDelete,
     ]
   } else {
     // 安装版：等待退出后启动安装向导（assisted installer，用户点下一步即可）
     lines = [
       '@echo off',
-      ...wait,
+      ...waitForExit,
       'start "" "%NAL_NEW_EXE%"',
-      'del /q "%~f0" >nul 2>&1',
-      'exit /b',
+      selfDelete,
     ]
   }
   const scriptPath = path.join(os.tmpdir(), `nal-update-${Date.now()}.cmd`)
