@@ -2,12 +2,12 @@
   "name": "nuo agent launcher",
   "short_name": "nuo agent launcher",
   "description": "一键启动你的 Minecraft 世界 · 集成 Java 自动下载 · 免费免密钥 AI 助手 · 联机大厅",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#f6f8fb",
   "theme_color": "#3b82f6",
   "icons": [
-    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
-    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any" }
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any" }
   ]
 }

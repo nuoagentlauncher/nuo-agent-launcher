@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://mc.nuoagentlauncher.cn/sitemap.xml
+Sitemap: https://nuoagentlauncher.github.io/nuo-agent-launcher/sitemap.xml
