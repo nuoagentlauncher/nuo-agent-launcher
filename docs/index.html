@@ -4,8 +4,59 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>nuo agent launcher - 官方下载</title>
-<meta name="description" content="nuo agent launcher：一键启动你的 Minecraft 世界 · 集成 Java 自动下载 · 免费免密钥 AI 助手 · 联机大厅" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233b82f6'/%3E%3Cstop offset='1' stop-color='%238b5cf6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='2' y='2' width='60' height='60' rx='14' fill='url(%23g)'/%3E%3Ctext x='32' y='44' font-family='Arial Black,Arial' font-size='34' font-weight='900' fill='%23fff' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E" />
+<meta name="description" content="nuo agent launcher 是一款面向 Minecraft 玩家的启动器——多版本管理与一键启动、Java 全自动下载、模组与整合包、联机大厅与内网穿透、免密钥 AI 助手、深浅双主题配色。免费开源，开箱即用。" />
+<meta name="keywords" content="nuo agent launcher, Minecraft 启动器, MC 启动器, Java 自动下载, 联机, 模组, 整合包, AI 助手" />
+<link rel="canonical" href="https://mc.nuoagentlauncher.cn/" />
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<meta name="theme-color" content="#3b82f6" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="nuo agent launcher" />
+<meta property="og:title" content="nuo agent launcher - 官方下载" />
+<meta property="og:description" content="一键启动你的 Minecraft 世界 · 集成 Java 自动下载 · 免费免密钥 AI 助手 · 联机大厅" />
+<meta property="og:url" content="https://mc.nuoagentlauncher.cn/" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="nuo agent launcher - 官方下载" />
+<meta name="twitter:description" content="一键启动你的 Minecraft 世界 · 集成 Java 自动下载 · 免费免密钥 AI 助手 · 联机大厅" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "url": "https://mc.nuoagentlauncher.cn/",
+      "name": "nuo agent launcher"
+    },
+    {
+      "@type": "Organization",
+      "url": "https://mc.nuoagentlauncher.cn/",
+      "name": "nuo agent launcher",
+      "logo": "https://mc.nuoagentlauncher.cn/apple-touch-icon.png"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "nuo agent launcher",
+      "operatingSystem": "Windows 10, Windows 11",
+      "applicationCategory": "GameApplication",
+      "softwareVersion": "1.2.0",
+      "url": "https://mc.nuoagentlauncher.cn/",
+      "downloadUrl": "https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest",
+      "description": "nuo agent launcher 是一款面向 Minecraft 玩家的启动器——多版本管理与一键启动、Java 全自动下载、模组与整合包、联机大厅与内网穿透、免密钥 AI 助手、深浅双主题配色。",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
+      "featureList": [
+        "多版本管理与一键启动",
+        "Java 全自动下载安装",
+        "模组与整合包管理",
+        "联机大厅与内网穿透",
+        "免密钥 AI 助手",
+        "深浅双主题配色"
+      ]
+    }
+  ]
+}
+</script>
 <style>
   :root {
     --accent: #3b82f6;
@@ -75,12 +126,13 @@
   }
   .aurora { position: absolute; inset: 0; z-index: -2; overflow: hidden; }
   .aurora span {
-    position: absolute; border-radius: 50%; filter: blur(90px); opacity: .5;
+    position: absolute; border-radius: 50%; filter: blur(90px); opacity: .62;
     animation: drift 16s ease-in-out infinite;
   }
   .aurora span:nth-child(1) { width: 46vw; height: 46vw; left: -10vw; top: -12vw; background: #93c5fd; }
   .aurora span:nth-child(2) { width: 40vw; height: 40vw; right: -8vw; top: 4vw; background: #c4b5fd; animation-delay: -5s; }
-  .aurora span:nth-child(3) { width: 34vw; height: 34vw; left: 28vw; bottom: -16vw; background: #a7f3d0; animation-delay: -10s; opacity: .4; }
+  .aurora span:nth-child(3) { width: 34vw; height: 34vw; left: 28vw; bottom: -16vw; background: #a7f3d0; animation-delay: -10s; opacity: .42; }
+  .aurora span:nth-child(4) { width: 36vw; height: 36vw; right: 20vw; top: -16vw; background: #f9a8d4; animation-delay: -7s; opacity: .38; }
   @keyframes drift {
     0%, 100% { transform: translate(0, 0) scale(1); }
     33% { transform: translate(6vw, 4vw) scale(1.12); }
@@ -91,7 +143,7 @@
   .cube {
     position: absolute; background: linear-gradient(135deg, var(--accent), var(--accent2));
     border-radius: 6px; opacity: .16; animation: cubeFloat 9s ease-in-out infinite;
-    box-shadow: 0 10px 30px rgba(99, 102, 241, .25);
+    box-shadow: 0 10px 30px rgba(99, 102, 241, .45);
   }
   .cube:nth-child(1) { width: 54px; height: 54px; left: 8%;  top: 22%; animation-delay: 0s; }
   .cube:nth-child(2) { width: 30px; height: 30px; left: 18%; top: 68%; animation-delay: -2s; opacity: .12; }
@@ -437,9 +489,92 @@
     .side { display: none; }
     .quick4 { grid-template-columns: 1fr 1fr; }
   }
+
+  /* ============ SVG 图标体系 ============ */
+  .sic {
+    width: 1em; height: 1em; stroke: currentColor; fill: none;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    vertical-align: -0.14em; flex-shrink: 0;
+  }
+  .sic.fill { fill: currentColor; stroke: none; }
+  .feature .ico .sic { width: 22px; height: 22px; }
+  .dl-card .ic .sic { width: 38px; height: 38px; }
+  .ai-spark .sic { width: 30px; height: 30px; }
+  .snav .sic, .shot-tab .sic, .log-tab .sic { width: 13px; height: 13px; }
+  .qcard .qi .sic { width: 17px; height: 17px; }
+  .btn-big .sic { width: 17px; height: 17px; }
+  .nav-cta .sic { width: 14px; height: 14px; }
+  .hero-meta .sic { width: 14px; height: 14px; }
+  .chip .sic { width: 13px; height: 13px; }
+  .ai-act .sic { width: 11px; height: 11px; }
+  .btn-launch .sic { width: 12px; height: 12px; }
+
+  /* ============ 炫酷背景：全页网格 + Hero 粒子连线/网格/光晕 ============ */
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: -3; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(99,102,241,.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(99,102,241,.05) 1px, transparent 1px);
+    background-size: 52px 52px;
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 92%);
+    mask-image: linear-gradient(180deg, #000 0%, transparent 92%);
+  }
+  .hero .grid-bg {
+    position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden;
+    -webkit-mask-image: radial-gradient(ellipse 85% 62% at 50% 42%, #000 25%, transparent 78%);
+    mask-image: radial-gradient(ellipse 85% 62% at 50% 42%, #000 25%, transparent 78%);
+  }
+  .hero .grid-bg::before {
+    content: ""; position: absolute; inset: -52px 0 0;
+    background-image:
+      linear-gradient(rgba(99,102,241,.13) 1.5px, transparent 1.5px),
+      linear-gradient(90deg, rgba(139,92,246,.13) 1.5px, transparent 1.5px);
+    background-size: 52px 52px;
+    animation: gridScroll 3.2s linear infinite;
+  }
+  @keyframes gridScroll { to { transform: translateY(52px); } }
+  #heroFx { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+  .hero-glow {
+    position: absolute; left: 50%; top: 46%; width: min(760px, 86vw); height: min(760px, 86vw);
+    z-index: -1; pointer-events: none;
+    background: radial-gradient(circle, rgba(99,102,241,.16), rgba(139,92,246,.08) 45%, transparent 70%);
+    animation: glowPulse 7s ease-in-out infinite;
+  }
+  @keyframes glowPulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: .9; }
+    50% { transform: translate(-50%, -50%) scale(1.12); opacity: .6; }
+  }
 </style>
 </head>
 <body>
+
+<!-- ============ SVG 图标库（内联 symbol，全页复用） ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></symbol>
+    <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></symbol>
+    <symbol id="i-coffee" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+    <symbol id="i-gamepad" viewBox="0 0 24 24"><line x1="6" x2="10" y1="12" y2="12"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="15" x2="15.01" y1="13" y2="13"/><line x1="18" x2="18.01" y1="11" y2="11"/><path d="M17.32 5H6.68a4 4 0 0 0-3.98 3.59C2.6 9.42 2 14.46 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.41-1.41A2 2 0 0 1 9.83 16h4.34a2 2 0 0 1 1.41.59L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.54-.6-6.58-.68-7.26A4 4 0 0 0 17.32 5z"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="i-logs" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></symbol>
+    <symbol id="i-palette" viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r="1" fill="currentColor" stroke="none"/><circle cx="17.5" cy="10.5" r="1" fill="currentColor" stroke="none"/><circle cx="8.5" cy="7.5" r="1" fill="currentColor" stroke="none"/><circle cx="6.5" cy="12.5" r="1" fill="currentColor" stroke="none"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.93 0 1.65-.75 1.65-1.69 0-.44-.18-.84-.44-1.13-.29-.29-.44-.65-.44-1.12a1.64 1.64 0 0 1 1.67-1.67h2c3.05 0 5.55-2.5 5.55-5.55C21.97 6.01 17.46 2 12 2z"/></symbol>
+    <symbol id="i-zap" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
+    <symbol id="i-key" viewBox="0 0 24 24"><path d="m21 2-2 2"/><path d="m11.39 11.61a5.5 5.5 0 1 1-7.78 7.78 5.5 5.5 0 0 1 7.78-7.78zm0 0L15.5 7.5"/><path d="m15.5 7.5 3 3L22 7l-3-3"/><path d="m15.5 7.5L19 4"/></symbol>
+    <symbol id="i-infinity" viewBox="0 0 24 24"><path d="M12 12c-2-2.67-4-4-6-4a4 4 0 1 0 0 8c2 0 4-1.33 6-4Zm0 0c2 2.67 4 4 6 4a4 4 0 0 0 0-8c-2 0-4 1.33-6 4Z"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
+    <symbol id="i-package" viewBox="0 0 24 24"><path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></symbol>
+    <symbol id="i-rocket" viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></symbol>
+    <symbol id="i-backpack" viewBox="0 0 24 24"><path d="M4 10a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M8 21v-5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v5"/><path d="M8 10h8"/><path d="M8 18h8"/></symbol>
+    <symbol id="i-disk" viewBox="0 0 24 24"><line x1="22" x2="2" y1="12" y2="12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><line x1="6" x2="6.01" y1="16" y2="16"/><line x1="10" x2="10.01" y1="16" y2="16"/></symbol>
+  </defs>
+</svg>
 
 <!-- ============ 导航 ============ -->
 <nav>
@@ -449,23 +584,26 @@
     <a href="#shots">界面展示</a>
     <a href="#changelog">更新日志</a>
     <a href="#ai">免费 AI</a>
-    <a class="nav-cta" href="#download">⬇ 下载</a>
+    <a class="nav-cta" href="#download"><svg class="sic"><use href="#i-download"/></svg> 下载</a>
   </div>
 </nav>
 
 <!-- ============ Hero ============ -->
 <header class="hero">
-  <div class="aurora"><span></span><span></span><span></span></div>
+  <div class="aurora"><span></span><span></span><span></span><span></span></div>
+  <div class="hero-glow"></div>
+  <div class="grid-bg"></div>
+  <canvas id="heroFx"></canvas>
   <div class="cubes"><i class="cube"></i><i class="cube"></i><i class="cube"></i><i class="cube"></i><i class="cube"></i><i class="cube"></i></div>
   <div class="hero-badge"><span class="dot"></span> <span id="heroVersion">v1.2.0</span> 正式版 · Windows 10 / 11 x64</div>
   <h1>nuo agent launcher</h1>
   <p class="sub">一键启动你的 Minecraft 世界 —— 集成 Java 自动下载 · 基岩版支持 · 免费免密钥 AI 助手 · 联机大厅 · 自动更新</p>
   <div class="hero-btns">
-    <a class="btn-big btn-primary" id="heroPortable" data-dl="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" href="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" target="_blank" rel="noopener">⬇ 下载便携版</a>
-    <a class="btn-big btn-plain" id="heroSetup" data-dl="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" href="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" target="_blank" rel="noopener">⬇ 下载安装版</a>
+    <a class="btn-big btn-primary" id="heroPortable" data-dl="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" href="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" target="_blank" rel="noopener"><svg class="sic"><use href="#i-download"/></svg> 下载便携版</a>
+    <a class="btn-big btn-plain" id="heroSetup" data-dl="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" href="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" target="_blank" rel="noopener"><svg class="sic"><use href="#i-download"/></svg> 下载安装版</a>
   </div>
   <div class="hero-meta">
-    <span>✅ 免费开源</span><span>🤖 AI 无需密钥 开箱即用</span><span>☕ Java 全自动管理</span><span>🌐 官方源 + 国内镜像加速</span>
+    <span><svg class="sic"><use href="#i-check"/></svg> 免费开源</span><span><svg class="sic"><use href="#i-sparkles"/></svg> AI 无需密钥 开箱即用</span><span><svg class="sic"><use href="#i-coffee"/></svg> Java 全自动管理</span><span><svg class="sic"><use href="#i-globe"/></svg> 官方源 + 国内镜像加速</span>
   </div>
 </header>
 
@@ -474,14 +612,14 @@
   <h2 class="sec-title reveal">功能特性</h2>
   <p class="sec-sub reveal">一个启动器，装下你的整个 Minecraft 世界</p>
   <div class="features">
-    <div class="feature reveal"><div class="ico">⬇️</div><h3>版本下载</h3><p>原版 + Forge / Fabric / Optifine / NeoForge / 基岩版，官方源与 BMCLAPI 镜像智能多源回退。</p></div>
-    <div class="feature reveal"><div class="ico">☕</div><h3>Java 自动管理</h3><p>按版本自动匹配 JRE 8 / 17 / 21 / 25，缺失时自动从镜像下载安装，无需手动配置。</p></div>
-    <div class="feature reveal"><div class="ico">🎮</div><h3>游戏启动</h3><p>版本隔离、内存设置、native 自动提取、启动参数全自动生成，一键进服。</p></div>
-    <div class="feature reveal"><div class="ico">👤</div><h3>账号管理</h3><p>离线 / 正版 Microsoft / 外置 Yggdrasil（authlib-injector）全支持。</p></div>
-    <div class="feature reveal"><div class="ico">🌐</div><h3>联机大厅</h3><p>房间创建、密码保护、局域网自动发现、UPnP 内网穿透，和朋友轻松联机。</p></div>
-    <div class="feature reveal"><div class="ico">🤖</div><h3>AI 助手</h3><p>内置免费 AI 通道，<b>无需任何 API 密钥</b>，开箱即用；支持 AI 测速自动选最快通道。</p><span class="tag">免费 · 免密钥</span></div>
-    <div class="feature reveal"><div class="ico">📋</div><h3>日志系统</h3><p>启动 / 下载 / Java / 联机 / AI / 账号全类别日志，实时过滤、一键导出。</p></div>
-    <div class="feature reveal"><div class="ico">🎨</div><h3>主题与配色</h3><p>深浅双主题随心切换，开发者配色工作室，打造专属外观。</p></div>
+    <div class="feature reveal"><div class="ico"><svg class="sic"><use href="#i-download"/></svg></div><h3>版本下载</h3><p>原版 + Forge / Fabric / Optifine / NeoForge / 基岩版，官方源与 BMCLAPI 镜像智能多源回退。</p></div>
+    <div class="feature reveal"><div class="ico"><svg class="sic"><use href="#i-coffee"/></svg></div><h3>Java 自动管理</h3><p>按版本自动匹配 JRE 8 / 17 / 21 / 25，缺失时自动从镜像下载安装，无需手动配置。</p></div>
+    <div class="feature reveal"><div class="ico"><svg class="sic"><use href="#i-gamepad"/></svg></div><h3>游戏启动</h3><p>版本隔离、内存设置、native 自动提取、启动参数全自动生成，一键进服。</p></div>
+    <div class="feature reveal"><div class="ico"><svg class="sic"><use href="#i-user"/></svg></div><h3>账号管理</h3><p>离线 / 正版 Microsoft / 外置 Yggdrasil（authlib-injector）全支持。</p></div>
+    <div class="feature reveal"><div class="ico"><svg class="sic"><use href="#i-globe"/></svg></div><h3>联机大厅</h3><p>房间创建、密码保护、局域网自动发现、UPnP 内网穿透，和朋友轻松联机。</p></div>
+    <div class="feature reveal"><div class="ico"><svg class="sic"><use href="#i-sparkles"/></svg></div><h3>AI 助手</h3><p>内置免费 AI 通道，<b>无需任何 API 密钥</b>，开箱即用；支持 AI 测速自动选最快通道。</p><span class="tag">免费 · 免密钥</span></div>
+    <div class="feature reveal"><div class="ico"><svg class="sic"><use href="#i-logs"/></svg></div><h3>日志系统</h3><p>启动 / 下载 / Java / 联机 / AI / 账号全类别日志，实时过滤、一键导出。</p></div>
+    <div class="feature reveal"><div class="ico"><svg class="sic"><use href="#i-palette"/></svg></div><h3>主题与配色</h3><p>深浅双主题随心切换，开发者配色工作室，打造专属外观。</p></div>
   </div>
 </section>
 
@@ -489,13 +627,13 @@
 <section id="ai" style="padding-top: 0;">
   <div class="ai-banner reveal">
     <div>
-      <h3>🤖 AI 助手 · 完全免费 · 无需 API 密钥</h3>
+      <h3><svg class="sic"><use href="#i-sparkles"/></svg> AI 助手 · 完全免费 · 无需 API 密钥</h3>
       <p>内置多个免费 AI 通道，多模型自动切换；打开就能聊，Minecraft 问题有问必答。</p>
     </div>
     <div class="chips">
-      <span class="chip">⚡ AI 测速</span>
-      <span class="chip">🔑 零密钥</span>
-      <span class="chip">♾️ 自动重试排队</span>
+      <span class="chip"><svg class="sic fill"><use href="#i-zap"/></svg> AI 测速</span>
+      <span class="chip"><svg class="sic"><use href="#i-key"/></svg> 零密钥</span>
+      <span class="chip"><svg class="sic"><use href="#i-infinity"/></svg> 自动重试排队</span>
     </div>
   </div>
 </section>
@@ -507,11 +645,11 @@
 
   <div class="shots-wrap reveal">
     <div class="shot-tabs">
-      <button class="shot-tab active" data-i="0">🏠 主页</button>
-      <button class="shot-tab" data-i="1">🌐 联机大厅</button>
-      <button class="shot-tab" data-i="2">🤖 AI 助手</button>
-      <button class="shot-tab" data-i="3">📋 日志 / 记录</button>
-      <button class="shot-tab" data-i="4">ℹ️ 关于</button>
+      <button class="shot-tab active" data-i="0"><svg class="sic"><use href="#i-home"/></svg> 主页</button>
+      <button class="shot-tab" data-i="1"><svg class="sic"><use href="#i-globe"/></svg> 联机大厅</button>
+      <button class="shot-tab" data-i="2"><svg class="sic"><use href="#i-sparkles"/></svg> AI 助手</button>
+      <button class="shot-tab" data-i="3"><svg class="sic"><use href="#i-logs"/></svg> 日志 / 记录</button>
+      <button class="shot-tab" data-i="4"><svg class="sic"><use href="#i-info"/></svg> 关于</button>
     </div>
 
     <div class="shot-stage">
@@ -529,16 +667,16 @@
                 <div class="app-main">
                   <div class="side">
                     <div class="brandline"><span class="nlogo">N</span><span class="bname">nuo agent<small>launcher</small></span></div>
-                    <div class="snav active">🏠 主页</div>
-                    <div class="snav">⬇ 下载</div>
-                    <div class="snav">🧩 模组</div>
-                    <div class="snav">👥 联机</div>
-                    <div class="snav">✨ AI 助手</div>
-                    <div class="snav">📄 日志/记录</div>
-                    <div class="snav">⚙️ 设置</div>
-                    <div class="snav">ℹ️ 关于</div>
+                    <div class="snav active"><svg class="sic"><use href="#i-home"/></svg> 主页</div>
+                    <div class="snav"><svg class="sic"><use href="#i-download"/></svg> 下载</div>
+                    <div class="snav"><svg class="sic"><use href="#i-package"/></svg> 模组</div>
+                    <div class="snav"><svg class="sic"><use href="#i-users"/></svg> 联机</div>
+                    <div class="snav"><svg class="sic"><use href="#i-sparkles"/></svg> AI 助手</div>
+                    <div class="snav"><svg class="sic"><use href="#i-logs"/></svg> 日志/记录</div>
+                    <div class="snav"><svg class="sic"><use href="#i-gear"/></svg> 设置</div>
+                    <div class="snav"><svg class="sic"><use href="#i-info"/></svg> 关于</div>
                     <div class="snav">&lt;/&gt; 开发者</div>
-                    <div class="snav">🎨 配色</div>
+                    <div class="snav"><svg class="sic"><use href="#i-palette"/></svg> 配色</div>
                     <div class="devbadge">● 开发者模式</div>
                     <div class="ver">v1.0.0</div>
                   </div>
@@ -546,17 +684,17 @@
                     <div class="hero-app">
                       <h2>nuo agent launcher</h2>
                       <p>一键启动你的 Minecraft 世界 · 集成 Java 自动下载 · AI 助手 · 联机</p>
-                      <span class="btn-launch">▶ 启动游戏</span>
+                      <span class="btn-launch"><svg class="sic fill"><use href="#i-play"/></svg> 启动游戏</span>
                     </div>
                     <div class="sel-card">
                       <div class="sel-col"><label>游戏版本</label><div class="sel-box">未安装任何版本 <span>⌄</span></div><span class="mini-btn">管理版本 / 下载新版本</span></div>
                       <div class="sel-col"><label>账号</label><div class="sel-box">未添加账号 <span>⌄</span></div><span class="mini-btn">管理账号</span></div>
                     </div>
                     <div class="quick4">
-                      <div class="qcard"><div class="qi">⬇</div><b>下载新版本</b><span>官方 + Forge / Fabric / Optifine</span></div>
-                      <div class="qcard"><div class="qi">👥</div><b>联机</b><span>创建或加入房间</span></div>
-                      <div class="qcard"><div class="qi">✨</div><b>AI 助手</b><span>免费 AI 对话</span></div>
-                      <div class="qcard"><div class="qi">📋</div><b>查看日志</b><span>下载、Java、启动记录</span></div>
+                      <div class="qcard"><div class="qi"><svg class="sic"><use href="#i-download"/></svg></div><b>下载新版本</b><span>官方 + Forge / Fabric / Optifine</span></div>
+                      <div class="qcard"><div class="qi"><svg class="sic"><use href="#i-users"/></svg></div><b>联机</b><span>创建或加入房间</span></div>
+                      <div class="qcard"><div class="qi"><svg class="sic"><use href="#i-sparkles"/></svg></div><b>AI 助手</b><span>免费 AI 对话</span></div>
+                      <div class="qcard"><div class="qi"><svg class="sic"><use href="#i-logs"/></svg></div><b>查看日志</b><span>下载、Java、启动记录</span></div>
                     </div>
                   </div>
                 </div>
@@ -602,11 +740,11 @@
             <div class="browser-body">
               <div class="app">
                 <div class="ai-head">
-                  <div><b>✨ AI 助手</b><div class="sub">内置免费 AI 通道 · 无需 API 密钥 · 开箱即用</div></div>
-                  <div class="ai-acts"><span class="ai-act">⚡ AI 测速</span><span class="ai-act">清空对话</span></div>
+                  <div><b><svg class="sic"><use href="#i-sparkles"/></svg> AI 助手</b><div class="sub">内置免费 AI 通道 · 无需 API 密钥 · 开箱即用</div></div>
+                  <div class="ai-acts"><span class="ai-act"><svg class="sic fill"><use href="#i-zap"/></svg> AI 测速</span><span class="ai-act">清空对话</span></div>
                 </div>
                 <div class="ai-body">
-                  <span class="ai-spark">✨</span>
+                  <span class="ai-spark"><svg class="sic"><use href="#i-sparkles"/></svg></span>
                   <b>你好！我是 nuo agent launcher 的 AI 助手</b>
                   <div class="sub">内置免费 AI 通道 · 开箱即用 · 询问任何 Minecraft 或启动器相关的问题</div>
                   <div class="ai-grid">
@@ -631,9 +769,9 @@
             <div class="browser-body">
               <div class="app">
                 <div class="app-titlebar"><span></span><span></span></div>
-                <div class="log-head"><b>📋 日志 / 记录</b><div class="log-acts"><span class="ai-act">↻ 刷新</span><span class="ai-act">导出</span><span class="ai-act">清空</span></div></div>
+                <div class="log-head"><b><svg class="sic"><use href="#i-logs"/></svg> 日志 / 记录</b><div class="log-acts"><span class="ai-act"><svg class="sic"><use href="#i-refresh"/></svg> 刷新</span><span class="ai-act">导出</span><span class="ai-act">清空</span></div></div>
                 <div class="log-tabbar">
-                  <span class="log-tab active">🚀 启动日志</span><span class="log-tab">L 下载日志</span><span class="log-tab">☕ Java 日志</span><span class="log-tab">👥 联机日志</span><span class="log-tab">✨ AI 日志</span><span class="log-tab">👤 账号日志</span><span class="log-tab">⚙️ 系统日志</span>
+                  <span class="log-tab active"><svg class="sic"><use href="#i-rocket"/></svg> 启动日志</span><span class="log-tab"><svg class="sic"><use href="#i-download"/></svg> 下载日志</span><span class="log-tab"><svg class="sic"><use href="#i-coffee"/></svg> Java 日志</span><span class="log-tab"><svg class="sic"><use href="#i-users"/></svg> 联机日志</span><span class="log-tab"><svg class="sic"><use href="#i-sparkles"/></svg> AI 日志</span><span class="log-tab"><svg class="sic"><use href="#i-user"/></svg> 账号日志</span><span class="log-tab"><svg class="sic"><use href="#i-gear"/></svg> 系统日志</span>
                 </div>
                 <div class="log-filter">
                   <div class="fin">过滤关键字...</div>
@@ -711,16 +849,16 @@
   <div class="dl-cards">
     <div class="dl-card reveal">
       <div class="rec">推荐</div>
-      <div class="ic">🎒</div>
+      <div class="ic"><svg class="sic"><use href="#i-backpack"/></svg></div>
       <h3>便携版</h3>
       <div class="meta">免安装 · 双击即用 · 适合 U 盘携带<br />约 68 MB</div>
-      <a class="btn-big btn-primary" id="dlPortable" data-dl="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" href="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" target="_blank" rel="noopener">⬇ 立即下载</a>
+      <a class="btn-big btn-primary" id="dlPortable" data-dl="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" href="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" target="_blank" rel="noopener"><svg class="sic"><use href="#i-download"/></svg> 立即下载</a>
     </div>
     <div class="dl-card reveal">
-      <div class="ic">📦</div>
+      <div class="ic"><svg class="sic"><use href="#i-disk"/></svg></div>
       <h3>安装版</h3>
       <div class="meta">安装向导 · 可选安装目录 · 桌面快捷方式<br />约 68 MB</div>
-      <a class="btn-big btn-plain" id="dlSetup" data-dl="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" href="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" target="_blank" rel="noopener">⬇ 立即下载</a>
+      <a class="btn-big btn-plain" id="dlSetup" data-dl="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" href="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases/latest" target="_blank" rel="noopener"><svg class="sic"><use href="#i-download"/></svg> 立即下载</a>
     </div>
   </div>
   <p class="dl-note reveal">安装包托管在 <b>GitHub Releases</b>，永久有效 · 启动器内置自动更新检测 · <b>AI 助手无需任何 API 密钥</b></p>
@@ -869,7 +1007,7 @@
       const tags = (i === 0 ? '<span class="cl-latest">最新</span>' : '') +
         (r.prerelease ? '<span class="cl-pre">预览版</span>' : '')
       const assets = (r.assets || []).map((a) =>
-        `<a data-dl="${escapeHtml(a.browser_download_url)}" href="${escapeHtml(a.browser_download_url)}" target="_blank" rel="noopener">⬇ ${escapeHtml(a.name)} · ${fmtSize(a.size)}</a>`).join('')
+        `<a data-dl="${escapeHtml(a.browser_download_url)}" href="${escapeHtml(a.browser_download_url)}" target="_blank" rel="noopener"><svg class="sic" style="width:12px;height:12px;"><use href="#i-download"/></svg> ${escapeHtml(a.name)} · ${fmtSize(a.size)}</a>`).join('')
       return `<div class="cl-item">
         <div class="cl-head">
           <span class="cl-ver">${ver}</span>${tags}
@@ -896,6 +1034,71 @@
       loading.innerHTML = `更新日志暂时无法加载（网络原因）。<br><a href="https://github.com/nuoagentlauncher/nuo-agent-launcher/releases" target="_blank" rel="noopener" style="color:var(--accent);font-weight:600;">点此前往 GitHub Releases 查看 →</a>`
       console.warn('Changelog fetch failed:', err)
     })
+
+  /* ============ Hero 粒子连线背景 ============ */
+  ;(function () {
+    const cv = document.getElementById('heroFx')
+    if (!cv) return
+    const reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches
+    const ctx = cv.getContext('2d')
+    const hero = cv.parentElement
+    const COLORS = ['99,102,241', '59,130,246', '139,92,246', '236,72,153']
+    const dpr = Math.min(window.devicePixelRatio || 1, 2)
+    const LINK = 130
+    let W = 0, H = 0, parts = [], running = false, raf = 0
+    function resize() {
+      W = hero.clientWidth; H = hero.clientHeight
+      cv.width = W * dpr; cv.height = H * dpr
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      const n = Math.min(90, Math.round((W * H) / 16000))
+      parts = Array.from({ length: n }, () => ({
+        x: Math.random() * W, y: Math.random() * H,
+        r: Math.random() * 1.7 + 0.7,
+        vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3,
+        c: COLORS[(Math.random() * COLORS.length) | 0],
+        a: Math.random() * 0.45 + 0.3, ph: Math.random() * Math.PI * 2, tw: Math.random() * 0.03 + 0.012,
+      }))
+    }
+    function tick() {
+      if (!running) return
+      ctx.clearRect(0, 0, W, H)
+      for (const p of parts) {
+        p.x += p.vx; p.y += p.vy; p.ph += p.tw
+        if (p.x < -20) p.x = W + 20; else if (p.x > W + 20) p.x = -20
+        if (p.y < -20) p.y = H + 20; else if (p.y > H + 20) p.y = -20
+      }
+      ctx.lineWidth = 1
+      for (let i = 0; i < parts.length; i++) {
+        for (let j = i + 1; j < parts.length; j++) {
+          const a = parts[i], b = parts[j]
+          const dx = a.x - b.x, dy = a.y - b.y, d2 = dx * dx + dy * dy
+          if (d2 < LINK * LINK) {
+            ctx.strokeStyle = 'rgba(99,102,241,' + ((1 - Math.sqrt(d2) / LINK) * 0.15).toFixed(3) + ')'
+            ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke()
+          }
+        }
+      }
+      for (const p of parts) {
+        ctx.fillStyle = 'rgba(' + p.c + ',' + Math.max(0.08, p.a + Math.sin(p.ph) * 0.22).toFixed(3) + ')'
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill()
+      }
+      raf = requestAnimationFrame(tick)
+    }
+    function start() { if (!running) { running = true; tick() } }
+    function stop() { running = false; cancelAnimationFrame(raf) }
+    resize()
+    if (reduced) { running = true; tick(); running = false } // 减弱动效偏好：只画一帧静态粒子
+    else {
+      start()
+      window.addEventListener('resize', resize)
+      new IntersectionObserver((es) => es.forEach((e) => (e.isIntersecting ? start() : stop()))).observe(cv)
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) { stop(); return }
+        const r = cv.getBoundingClientRect()
+        if (r.bottom > 0 && r.top < innerHeight) start()
+      })
+    }
+  })()
 </script>
 </body>
 </html>

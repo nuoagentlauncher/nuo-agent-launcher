@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mc.nuoagentlauncher.cn/sitemap.xml
