@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useConfigStore } from '../stores/config.js'
+import Icon from '../components/Icon.jsx'
 import pkg from '../../package.json'
 const APP_VERSION = pkg.version
 
@@ -54,8 +55,8 @@ export default function DeveloperPage() {
             <div style={{
               width: 64, height: 64, margin: '0 auto 16px', borderRadius: 16,
               background: 'linear-gradient(135deg, var(--accent), #7c4dff)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32,
-            }}>⚡</div>
+              display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff',
+            }}><Icon name="code" size={32} /></div>
             <h2 style={{ fontSize: 20, fontWeight: 600, margin: 0, marginBottom: 4 }}>开发者模式</h2>
             <p style={{ color: 'var(--text-tertiary)', fontSize: 13, margin: 0 }}>请输入开发者密码以进入控制台</p>
           </div>
@@ -96,8 +97,8 @@ export default function DeveloperPage() {
             <div style={{
               width: 40, height: 40, borderRadius: 10,
               background: 'linear-gradient(135deg, var(--accent), #7c4dff)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20,
-            }}>⚡</div>
+              display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff',
+            }}><Icon name="code" size={20} /></div>
             <div>
               <h1 style={{ fontSize: 22, fontWeight: 700, margin: 0 }}>开发者控制台</h1>
               <p style={{ fontSize: 12, color: 'var(--text-tertiary)', margin: 0 }}>开发者模式已开启</p>
@@ -110,8 +111,9 @@ export default function DeveloperPage() {
               padding: '10px 18px', borderRadius: 10, fontSize: 14, fontWeight: 500, cursor: 'pointer',
               background: 'rgba(239,68,68,0.12)', color: 'var(--error)',
               border: '1px solid rgba(239,68,68,0.3)',
+              display: 'inline-flex', alignItems: 'center', gap: 6,
             }}
-          >⏻ 退出开发者模式</button>
+          ><Icon name="power" size={15} /> 退出开发者模式</button>
         </div>
 
         {/* 状态卡片 */}
@@ -150,7 +152,7 @@ export default function DeveloperPage() {
                 display: 'flex', alignItems: 'center', gap: 12, color: 'var(--text-primary)',
               }}
             >
-              <span style={{ fontSize: 24 }}>🎨</span>
+              <span style={{ display: 'inline-flex', color: 'var(--accent)' }}><Icon name="palette" size={24} /></span>
               <span>
                 <span style={{ display: 'block', fontSize: 14, fontWeight: 600 }}>启动器配色</span>
                 <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>修改主题色，独立页面</span>

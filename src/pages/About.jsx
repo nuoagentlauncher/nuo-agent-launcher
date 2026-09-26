@@ -1,6 +1,7 @@
 // 关于页面：版本信息、功能列表、开源声明、真实更新检查、更新日志
 import { useEffect, useState } from 'react'
 import { useUpdaterStore, isDownloading } from '../stores/updater.js'
+import Icon from '../components/Icon.jsx'
 import pkg from '../../package.json'
 
 const APP_VERSION = pkg.version
@@ -155,7 +156,7 @@ export default function AboutPage() {
               {/* 一键更新：自动下载（镜像加速）并安装 */}
               <div className="flex" style={{ gap: 8, marginBottom: 10, flexWrap: 'wrap' }}>
                 <button className="btn btn-primary" onClick={handleUpdateNow} disabled={downloading}>
-                  {downloading ? <><span className="spinner" />更新中...</> : '⚡ 一键更新（自动下载并安装）'}
+                  {downloading ? <><span className="spinner" />更新中...</> : <><Icon name="zap" size={15} /> 一键更新（自动下载并安装）</>}
                 </button>
                 {downloading && ['check', 'probe', 'download'].includes(download?.phase) && (
                   <button className="btn btn-ghost" onClick={() => window.nal.updater.cancelDownload()}>取消</button>
@@ -187,7 +188,7 @@ export default function AboutPage() {
               <div className="flex" style={{ gap: 8, flexWrap: 'wrap' }}>
                 {check.result.release.assets.map((a) => (
                   <button key={a.name} className="btn btn-ghost btn-sm" onClick={() => window.nal.updater.openUrl(a.url)}>
-                    ⬇ {a.name} {a.size ? `(${fmtSize(a.size)})` : ''}
+                    <Icon name="download" size={14} /> {a.name} {a.size ? `(${fmtSize(a.size)})` : ''}
                   </button>
                 ))}
                 <button className="btn btn-ghost btn-sm" onClick={() => window.nal.updater.openUrl(check.result.release.url)}>查看详情</button>
@@ -231,7 +232,7 @@ export default function AboutPage() {
                   <div className="flex" style={{ gap: 8, marginTop: 8, flexWrap: 'wrap' }}>
                     {r.assets.map((a) => (
                       <button key={a.name} className="btn btn-ghost btn-sm" onClick={() => window.nal.updater.openUrl(a.url)}>
-                        ⬇ {a.name} ({fmtSize(a.size)})
+                        <Icon name="download" size={14} /> {a.name} ({fmtSize(a.size)})
                       </button>
                     ))}
                   </div>

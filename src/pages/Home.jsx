@@ -2,6 +2,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useConfigStore } from '../stores/config.js'
+import Icon from '../components/Icon.jsx'
 
 export default function HomePage() {
   const nav = useNavigate()
@@ -167,7 +168,7 @@ export default function HomePage() {
         {error && (
           <div className="card" style={{ marginTop: 16, borderColor: 'var(--error)', background: 'rgba(239,68,68,0.08)' }}>
             <div className="flex items-center gap-3">
-              <span style={{ color: 'var(--error)' }}>⚠</span>
+              <span style={{ color: 'var(--error)', display: 'inline-flex' }}><Icon name="alert" size={18} /></span>
               <div>
                 <div style={{ fontWeight: 600, color: 'var(--error)' }}>启动失败</div>
                 <div className="text-sm text-secondary">{error}</div>
@@ -211,10 +212,10 @@ export default function HomePage() {
         {/* 启动诊断面板 */}
         <div className="card" style={{ marginTop: 16 }}>
           <div className="flex items-center justify-between">
-            <div className="text-lg" style={{ fontWeight: 600 }}>🛠 启动诊断</div>
+            <div className="text-lg" style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="wrench" size={19} /> 启动诊断</div>
             <div className="flex gap-2">
               <button className="btn btn-ghost btn-sm" onClick={runAiAnalyze} disabled={aiLoading || !selectedVersion}>
-                {aiLoading ? <><span className="spinner" /> AI 分析中...</> : '🤖 AI 崩溃分析'}
+                {aiLoading ? <><span className="spinner" /> AI 分析中...</> : <><Icon name="bot" size={15} /> AI 崩溃分析</>}
               </button>
               <button className="btn btn-secondary btn-sm" onClick={runDiagnose} disabled={diagLoading || !selectedVersion}>
                 {diagLoading ? <><span className="spinner" /> 检测中...</> : '开始诊断'}
@@ -231,12 +232,12 @@ export default function HomePage() {
           {diag && (
             <div style={{ marginTop: 12 }}>
               {diag.issues.length === 0 ? (
-                <div className="diag-ok">✓ 未发现问题，内存、显卡、核心文件、Java 均正常</div>
+                <div className="diag-ok" style={{ display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="check" size={16} /> 未发现问题，内存、显卡、核心文件、Java 均正常</div>
               ) : (
                 diag.issues.map((it) => (
                   <div key={it.key} className={`diag-item diag-${it.level}`}>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 600 }}>{it.level === 'error' ? '⛔' : '⚠'} {it.title}</div>
+                      <div style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}><Icon name={it.level === 'error' ? 'ban' : 'alert'} size={15} /> {it.title}</div>
                       <div className="text-sm text-secondary" style={{ marginTop: 3 }}>{it.desc}</div>
                     </div>
                     {it.fix && (
@@ -257,7 +258,7 @@ export default function HomePage() {
 
           {aiResult && (
             <div className="ai-result">
-              <div style={{ fontWeight: 600, marginBottom: 6 }}>🤖 AI 分析结果（{aiResult.file}）</div>
+              <div style={{ fontWeight: 600, marginBottom: 6, display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="bot" size={16} /> AI 分析结果（{aiResult.file}）</div>
               <div className="text-sm" style={{ whiteSpace: 'pre-wrap', lineHeight: 1.7 }}>{aiResult.analysis}</div>
             </div>
           )}
@@ -286,10 +287,10 @@ export default function HomePage() {
 
         {/* 快速入口 */}
         <div className="quick-cards">
-          <QuickCard title="下载新版本" desc="官方 + Forge / Fabric / Optifine" icon="⬇" onClick={() => nav('/download')} />
-          <QuickCard title="联机" desc="创建或加入房间" icon="👥" onClick={() => nav('/multiplayer')} />
-          <QuickCard title="AI 助手" desc="DeepSeek V3 对话" icon="✨" onClick={() => nav('/ai')} />
-          <QuickCard title="查看日志" desc="下载、Java、启动记录" icon="📋" onClick={() => nav('/logs')} />
+          <QuickCard title="下载新版本" desc="官方 + Forge / Fabric / Optifine" icon="download" onClick={() => nav('/download')} />
+          <QuickCard title="联机" desc="创建或加入房间" icon="users" onClick={() => nav('/multiplayer')} />
+          <QuickCard title="AI 助手" desc="DeepSeek V3 对话" icon="sparkles" onClick={() => nav('/ai')} />
+          <QuickCard title="查看日志" desc="下载、Java、启动记录" icon="clipboard" onClick={() => nav('/logs')} />
         </div>
       </div>
 
@@ -357,7 +358,7 @@ export default function HomePage() {
           transition: all var(--transition);
         }
         .quick-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow); }
-        .quick-card-icon { font-size: 24px; margin-bottom: 8px; }
+        .quick-card-icon { margin-bottom: 8px; color: var(--accent); display: flex; }
         .quick-card-title { font-weight: 600; font-size: 14px; }
         .quick-card-desc { font-size: 11px; color: var(--text-tertiary); margin-top: 4px; }
         .diag-ok { padding: 12px; border-radius: var(--radius); background: rgba(34,197,94,0.1); color: var(--success); font-weight: 500; }
@@ -373,7 +374,7 @@ export default function HomePage() {
 function QuickCard({ title, desc, icon, onClick }) {
   return (
     <div className="quick-card" onClick={onClick}>
-      <div className="quick-card-icon">{icon}</div>
+      <div className="quick-card-icon"><Icon name={icon} size={24} /></div>
       <div className="quick-card-title">{title}</div>
       <div className="quick-card-desc">{desc}</div>
     </div>

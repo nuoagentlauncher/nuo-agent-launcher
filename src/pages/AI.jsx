@@ -1,6 +1,7 @@
 // AI 助手页面：聊天界面，流式响应，DeepSeek V3
 import { useEffect, useState, useRef } from 'react'
 import { useConfigStore } from '../stores/config.js'
+import Icon from '../components/Icon.jsx'
 
 const QUICK_PROMPTS = [
   'Minecraft 1.21 推荐什么模组？',
@@ -108,12 +109,12 @@ export default function AIPage() {
       {/* 顶栏 */}
       <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 className="text-xl" style={{ fontWeight: 600 }}>✨ AI 助手</h1>
+          <h1 className="text-xl" style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="sparkles" size={20} /> AI 助手</h1>
           <div className="text-xs text-tertiary">内置免费 AI 通道 · 无需 API 密钥 · 开箱即用</div>
         </div>
         <div className="flex gap-2">
           <button className="btn btn-ghost btn-sm" onClick={handleSpeedTest} disabled={proxyState?.testing}>
-            {proxyState?.testing ? <><span className="spinner" />测速中</> : '⚡ AI 测速'}
+            {proxyState?.testing ? <><span className="spinner" />测速中</> : <><Icon name="zap" size={14} /> AI 测速</>}
           </button>
           <button className="btn btn-ghost btn-sm" onClick={handleClear}>清空对话</button>
         </div>
@@ -125,11 +126,11 @@ export default function AIPage() {
           <div className="text-sm mb-2">
             <strong>AI 测速：</strong>
             {proxyState.success ? (
-              <span style={{ color: 'var(--success)' }}>
-                ✓ 最快通道 {proxyState.fastest.source} · {proxyState.fastest.model}（{proxyState.fastest.latencyMs}ms），已自动优先生效
+              <span style={{ color: 'var(--success)', display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+                <Icon name="check" size={14} /> 最快通道 {proxyState.fastest.source} · {proxyState.fastest.model}（{proxyState.fastest.latencyMs}ms），已自动优先生效
               </span>
             ) : (
-              <span style={{ color: 'var(--error)' }}>✗ 所有通道暂时不可用，请稍后重试</span>
+              <span style={{ color: 'var(--error)', display: 'inline-flex', alignItems: 'center', gap: 5 }}><Icon name="close" size={14} /> 所有通道暂时不可用，请稍后重试</span>
             )}
           </div>
           <div style={{ display: 'grid', gap: 6 }}>
@@ -161,13 +162,13 @@ export default function AIPage() {
         <div style={{ maxWidth: 900, margin: '0 auto' }}>
           {messages.length === 0 && !streamingText ? (
             <div style={{ textAlign: 'center', padding: '60px 0' }}>
-              <div style={{ fontSize: 48, marginBottom: 16 }}>✨</div>
+              <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'center', color: 'var(--accent)' }}><Icon name="sparkles" size={48} /></div>
               <h2 className="text-xl" style={{ fontWeight: 600, marginBottom: 8 }}>你好！我是 NUO OS 的 AI 助手</h2>
               <p className="text-secondary text-sm" style={{ marginBottom: 24 }}>内置免费 AI 通道 · 开箱即用 · 询问任何 Minecraft 或启动器相关的问题</p>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, maxWidth: 600, margin: '0 auto' }}>
                 {QUICK_PROMPTS.map((q, i) => (
                   <button key={i} className="btn btn-ghost" style={{ textAlign: 'left', justifyContent: 'flex-start' }} onClick={() => handleSend(q)}>
-                    <span className="text-tertiary">›</span> {q}
+                    <Icon name="chevron-right" size={14} /> {q}
                   </button>
                 ))}
               </div>
@@ -188,9 +189,9 @@ export default function AIPage() {
           )}
           {error && (
             <div className="card mt-4" style={{ borderColor: 'var(--error)', background: 'rgba(239,68,68,0.08)' }}>
-              <div className="text-sm" style={{ color: 'var(--error)' }}>⚠ {error}</div>
+              <div className="text-sm" style={{ color: 'var(--error)', display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="alert" size={15} /> {error}</div>
               <div className="text-xs text-tertiary mt-2">
-                免费通道可能限流（每分钟约 2 次），请稍等十几秒再发送；也可点击顶部"⚡ AI 测速"检查各通道状态。
+                免费通道可能限流（每分钟约 2 次），请稍等十几秒再发送；也可点击顶部「AI 测速」检查各通道状态。
               </div>
             </div>
           )}
@@ -232,7 +233,7 @@ function MessageBubble({ role, content, streaming }) {
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         color: isUser ? 'var(--accent)' : '#fff', fontSize: 14, fontWeight: 600,
       }}>
-        {isUser ? '我' : '✨'}
+        {isUser ? '我' : <Icon name="bot" size={18} />}
       </div>
       <div style={{
         maxWidth: '80%', padding: '12px 16px', borderRadius: 12,

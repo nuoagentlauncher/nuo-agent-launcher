@@ -1,6 +1,6 @@
 {
   "name": "nuo-agent-launcher",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "NUO OS - 一个功能丰富的 Minecraft 启动器，集成版本下载、Java 自动管理、联机、AI 助手、启动诊断、日志系统",
   "main": "electron/main.cjs",
   "author": "nuo agent launcher",
